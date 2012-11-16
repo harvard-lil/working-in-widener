@@ -1,0 +1,14 @@
+.tile {
+	border: solid 1px;
+	float: left;
+	width: 40px;
+	height: 40px;
+}
+
+.tile-row {
+	clear:left;
+}
+
+.selected-tile {
+	background-color: green;
+}
