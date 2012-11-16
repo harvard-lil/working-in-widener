@@ -4,10 +4,12 @@ $(function() {
     var player_id = Math.floor(Math.random()*16777215).toString(16);
 
     // Socket.io stuff
-    var iosocket = io.connect();	
+    var iosocket = io.connect('http://localhost:3000');	
     iosocket.on('connect', function () {
 
         iosocket.on('board_update', function(data) {
+
+console.log(data);
             $.each(data, function(index, value) {            
                 var n = $('#' + index);
                 $(n).removeAttr("id");
