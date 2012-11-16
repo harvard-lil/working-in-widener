@@ -25,6 +25,9 @@ var player_data = {};
 io.on('connection',function(socket){
     socket.on('move', function (data) {
         player_data[data.p] = {b: data.b, i: data.i, j: data.j};
+        console.log(player_data);
+        // Send to the sender and then to everyone else. You've got to serve the servants.
+        socket.emit('board_update', player_data);
         socket.broadcast.emit('board_update', player_data);
     });
 })

@@ -8,7 +8,7 @@ $(function() {
     iosocket.on('connect', function () {
 
         iosocket.on('board_update', function(data) {
-
+console.log('getting board_update');
 console.log(data);
             $.each(data, function(index, value) {            
                 var n = $('#' + index);
