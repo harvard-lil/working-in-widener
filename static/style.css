@@ -1,8 +1,32 @@
 .tile {
-	border: solid 1px;
+	/*border: solid 1px;*/
 	float: left;
-	width: 40px;
-	height: 40px;
+	width: 35px;
+	height: 35px;
+}
+
+.west-wall {
+  border-left:solid 1px;
+}
+
+.east-wall {
+  border-right:solid 1px;
+}
+
+.north-wall {
+  border-top: solid 1px;
+}
+
+.south-wall {
+  border-bottom: solid 1px;
+}
+
+.aisle {
+  /*background-color: #EBDDC0;*/
+}
+
+.stairs {
+  background-color:gray;
 }
 
 .tile-row {
@@ -11,4 +35,31 @@
 
 .selected-tile {
 	background-color: green;
+}
+
+.shelf {
+  background-color: #894200;
+}
+
+#dashboard {
+  padding:0 10px;
+  position: absolute;
+  top: 35px;
+  left:295px;
+  width:515px;
+  height:330px;
+}
+
+.current-target {
+  margin-left: 50px;
+  margin-top:5px;
+  float:left;
+}
+
+.left {
+  float:left;
+}
+
+.clear {
+  clear:both;
 }

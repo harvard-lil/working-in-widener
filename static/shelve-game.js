@@ -1,10 +1,19 @@
 $(function() {
 
+    var wid_b = ["DP612", "DP613", "DP614", "DP615", "DP616", "Q55", "Q516", "Q517", "Q524", "Q677", "DP618", "DP622", "DP623", "DP624", "DP625"];
+    var wid_b_endcaps = ["DP612 - DP616", "Q55 - Q677", "DP622 - DP625"];
+    $.each(wid_b, function(index, item) {
+      $(".aisle:eq(" + index + ")").data("callno", item);
+    });
+    $.each(wid_b_endcaps, function(index, item) {
+      $(".endcap:eq(" + index + ")").data("sign", item);
+    });
+    
     // generate a randomish player id. we also use this for color.
     var player_id = Math.floor(Math.random()*16777215).toString(16);
 
     // Socket.io stuff
-    var iosocket = io.connect('http://localhost:3000');	
+    var iosocket = io.connect('http://hlsl7.law.harvard.edu:3000');	
     iosocket.on('connect', function () {
 
         iosocket.on('board_update', function(data) {
@@ -21,6 +30,11 @@ console.log(data);
 
                 $(target_tile).attr('id', index);
                 $(target_tile).css("background-color","#" + index);
+                var callno = $(target_tile).data("callno");
+                $('.tile').text('');
+                $(target_tile).next('.tile').text(callno);
+                var sign = $(target_tile).data("sign");
+                $(target_tile).next('.tile').text(sign);
 
 
             });
