@@ -30,12 +30,18 @@ console.log(data);
 
                 $(target_tile).attr('id', index);
                 $(target_tile).css("background-color","#" + index);
+                var tile_position = $(target_tile).position();
                 var callno = $(target_tile).data("callno");
-                $('.tile').text('');
-                $(target_tile).next('.tile').text(callno);
+                $('#callno_sign, #endcap_sign').hide();
+                if(callno) {
+                  $('#callno_sign').show().text(callno);
+                  $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                }
                 var sign = $(target_tile).data("sign");
-                $(target_tile).next('.tile').text(sign);
-
+                if(sign) { 
+                  $('#endcap_sign').show().text(sign);
+                  $('#endcap_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                }
 
             });
 

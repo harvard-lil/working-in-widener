@@ -45,8 +45,20 @@
   /*background-color:pink;*/
 }
 
+#callno_sign, #endcap_sign {
+  height:35px;
+  width:48px;
+  background-color:#fff;
+  display:none;
+  position:absolute;
+  font-size:12px;
+  text-align:center;
+  padding-top:10px;
+  border:1px solid #efefef;
+}
+
 #dashboard {
-  padding:0 10px;
+  padding:0 35px;
   position: absolute;
   top: 35px;
   left:295px;
