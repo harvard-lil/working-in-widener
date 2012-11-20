@@ -41,6 +41,10 @@
   background-color: #894200;
 }
 
+.endcap {
+  /*background-color:pink;*/
+}
+
 #dashboard {
   padding:0 10px;
   position: absolute;
