@@ -10,22 +10,23 @@ $(function() {
     });
     
     // generate a randomish player id. we also use this for color.
-    var player_id = Math.floor(Math.random()*16777215).toString(16);
+    // var player_id = Math.floor(Math.random()*16777215).toString(16);
+    
+    var player_id;
 
     // Socket.io stuff
-    var iosocket = io.connect('http://hlsl7.law.harvard.edu:3000');	
+    var iosocket = io.connect('http://localhost:3000');	
     iosocket.on('connect', function () {
 
-
         iosocket.on('player_assignment', function(data) {
+            player_id = data;
             console.log(data)
         });
-
 
         iosocket.on('board_update', function(data) {
 console.log(data);
             $.each(data, function(index, value) {
-                var n = $('#' + index);
+                var n = $('.' + index);
                 $(n).removeClass(index);
                 $(n).css("background-color","");    
 
