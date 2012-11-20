@@ -12,3 +12,11 @@
 .selected-tile {
 	background-color: green;
 }
+
+.player-one {
+    background-color: #34647F;
+}
+
+.player-two{
+    background-color: #BED333;
+}

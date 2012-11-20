@@ -7,19 +7,24 @@ $(function() {
     var iosocket = io.connect('http://localhost:3000');	
     iosocket.on('connect', function () {
 
+
+        iosocket.on('player_assignment', function(data) {
+            console.log(data)
+        });
+
+
         iosocket.on('board_update', function(data) {
-console.log('getting board_update');
 console.log(data);
-            $.each(data, function(index, value) {            
+            $.each(data, function(index, value) {
                 var n = $('#' + index);
-                $(n).removeAttr("id");
-                $(n).css("background-color","");
+                $(n).removeClass(index);
+                $(n).css("background-color","");    
 
 
                 var target_i = $('.tile-row')[value.i];
                 var target_tile = $(target_i).children()[value.j];
 
-                $(target_tile).attr('id', index);
+                $(target_tile).addClass(index);
                 $(target_tile).css("background-color","#" + index);
 
 
@@ -34,16 +39,15 @@ console.log(data);
     });
 
     // Board setup/game control stuff
-    $('.tile:first').attr('id', player_id);
+    $('.tile:first').addClass(player_id);
     $('.tile:first').css("background-color","#" + player_id);
 
     $(document).keydown(function(e) {
 
         /** Get the current position */
-        if (event.which === 37 || event.which === 38 || event.which === 39 || event.which === 40)     {
-            var currently_selected = $('#' + player_id);
+        if (e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40)     {
+            var currently_selected = $('.' + player_id);
             var next_tile;
-
 
             switch(e.keyCode) {
                 case 37: // left
