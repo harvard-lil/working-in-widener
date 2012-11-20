@@ -1,7 +1,8 @@
 $(function() {
 
-    var wid_b = ["DP612", "DP613", "DP614", "DP615", "DP616", "Q55", "Q516", "Q517", "Q524", "Q677", "DP618", "DP622", "DP623", "DP624", "DP625","Q678", "Q679", "Q680", "Q681", "Q682", "DP730", "DP732", "DP746", "DP780", "DP781", "Q625", "Q725", "Q730", "Q732", "Q734", "DP782", "DP790", "DP793", "DP794", "DP795", "Q736", "Q737", "Q739", "Q750", "Q801", "PG12", "PG106", "PG6700", "M433", "M470", "M475", "PG13", "PG222", "PG6718", "M35", "M471", "M479", "PG90", "PG322", "PG6719", "M450", "M472", "M482", "PG94", "PG422", "PG6720", "M451", "M473", "M700", "PG105", "PG523", "PG6722", "M456", "M474", "M809"];
-    var wid_b_endcaps = ["DP612 - DP616", "Q55 - Q677", "DP618 - DP625", "Q625 - Q682", "DP730 - DP781", "Q625 - Q734", "DP782 - DP795", "Q736 - Q801", "PG12 - PG105", "PG106 - PG523", "PG6700 - PG6722", "M433 - M456", "M470 - M474", "M475 - M809"];
+    // TODO: clean up this list. We'll use the first 15 for our first test
+    var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q22", "Q224", "Q225", "Q226", "Q227", "DP618", "DP622", "DP624", "DP625", "DP627","Q678", "Q679", "Q680", "Q681", "Q682", "DP730", "DP732", "DP746", "DP780", "DP781", "Q625", "Q725", "Q730", "Q732", "Q734", "DP782", "DP790", "DP793", "DP794", "DP795", "Q736", "Q737", "Q739", "Q750", "Q801", "PG12", "PG106", "PG6700", "M433", "M470", "M475", "PG13", "PG222", "PG6718", "M35", "M471", "M479", "PG90", "PG322", "PG6719", "M450", "M472", "M482", "PG94", "PG422", "PG6720", "M451", "M473", "M700", "PG105", "PG523", "PG6722", "M456", "M474", "M809"];
+    var wid_b_endcaps = ["DP612 - DP621", "Q22 - Q227", "DP618 - DP627", "Q625 - Q682", "DP730 - DP781", "Q625 - Q734", "DP782 - DP795", "Q736 - Q801", "PG12 - PG105", "PG106 - PG523", "PG6700 - PG6722", "M433 - M456", "M470 - M474", "M475 - M809"];
     $.each(wid_b, function(index, item) {
       $(".aisle:eq(" + index + ")").data("callno", item);
     });
@@ -22,20 +23,30 @@ $(function() {
             player_id = data;
             console.log(data)
         });
+        
+        iosocket.on('shelve_list', function(data) {
+            $.each(data[player_id], function(index, value) {
+                $('.title').html(value.title);
+                $('.current-target-callno').html(value.call_num);
+            });
+                
+                $('.tile:first').addClass('p1');
+                $('.tile:first').next().addClass('p2');
+        });
 
         iosocket.on('board_update', function(data) {
+
 console.log(data);
+
             $.each(data, function(index, value) {
                 var n = $('.' + index);
                 $(n).removeClass(index);
-                $(n).css("background-color","");    
-
 
                 var target_i = $('.tile-row')[value.i];
                 var target_tile = $(target_i).children()[value.j];
 
                 $(target_tile).addClass(index);
-                $(target_tile).css("background-color","#" + index);
+
                 var tile_position = $(target_tile).position();
                 var callno = $(target_tile).data("callno");
                 $('#callno_sign, #endcap_sign').hide();
@@ -53,15 +64,14 @@ console.log(data);
 
         });
 
-
         iosocket.on('disconnect', function() {
             console.log('disconnected');
         });
     });
 
     // Board setup/game control stuff
-    $('.tile:first').addClass(player_id);
-    $('.tile:first').css("background-color","#" + player_id);
+//    $('.tile:first').addClass(player_id);
+//    $('.tile:first').css("background-color","#" + player_id);
 
     $(document).keydown(function(e) {
 
@@ -73,8 +83,10 @@ console.log(data);
             switch(e.keyCode) {
                 case 37: // left
                 next_tile = $(currently_selected).prev('.tile');
-                if (next_tile.length == 0) {
-                    next_tile =	$(currently_selected).siblings(':last');
+                
+                // If we've reached a wall, don't let the user move
+                if (next_tile.length === 0 || next_tile.hasClass('shelf')) {
+                    next_tile = currently_selected;
                 }
 
                 break;
@@ -83,22 +95,26 @@ console.log(data);
                 // What column are we in?
                 var currently_selected_index = $(currently_selected).index();
 
-                // Now get the row we're in
+                // What row we're in?
                 var current_row = $(currently_selected).parent();
 
                 var prev_row = $(current_row).prev('.tile-row');
 
-                if (prev_row.length == 0) {
-                    prev_row = $(current_row).siblings(':last');
+                if (prev_row.length === 0) {
+                    prev_row = current_row;
                 }
 
                 next_tile = $(prev_row).children()[currently_selected_index];
+                
+                if ($(next_tile).hasClass('shelf')) {
+                    next_tile = currently_selected;
+                }
 
                 break;
-                case 39: // right				
+                case 39: // right
                 var next_tile = $(currently_selected).next('.tile');
-                if (next_tile.length == 0) {
-                    next_tile =	$(currently_selected).siblings(':first');
+                if (next_tile.length === 0 || next_tile.hasClass('shelf')) {
+                    next_tile = currently_selected;
                 }
 
                 break;
@@ -111,11 +127,16 @@ console.log(data);
 
                 var next_row = $(current_row).next('.tile-row');
 
-                if (next_row.length == 0) {
-                    next_row = $(current_row).siblings(':first');
+                if (next_row.length === 0) {
+                    next_row = current_row;
                 }
 
                 next_tile = $(next_row).children()[currently_selected_index];
+                
+                if ($(next_tile).hasClass('shelf')) {
+                    next_tile = currently_selected;
+                }
+                
                 break;
             }
 
@@ -124,7 +145,15 @@ console.log(data);
 
             // Now get the row we're in
             var message = {p: player_id, b: '1', i: i_pl, j: j_pl};
-            iosocket.emit('move', message);
+            
+            console.log(message);
+                
+                            
+            // Sometimes we don't actually move (when a user tries to walk into a wall)
+            if (currently_selected !== next_tile){
+
+                iosocket.emit('move', message);
+            }
         }
     });
 });

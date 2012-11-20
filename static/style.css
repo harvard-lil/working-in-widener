@@ -78,12 +78,12 @@
 
 .clear {
   clear:both;
+}
 
-.player-one {
+.p1 {
     background-color: #34647F;
 }
 
-.player-two{
+.p2 {
     background-color: #BED333;
-
 }
