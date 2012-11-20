@@ -30,8 +30,8 @@ $(function() {
                 $('.current-target-callno').html(value.call_num);
             });
                 
-                $('.tile:first').addClass('p1');
-                $('.tile:first').next().addClass('p2');
+                //$('.tile:first').addClass('p1');
+                //$('.tile:first').next().addClass('p2');
         });
 
         iosocket.on('board_update', function(data) {

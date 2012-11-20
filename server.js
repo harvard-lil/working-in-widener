@@ -28,12 +28,12 @@ io.on('connection', function(socket){
 
     var len = Object.keys(player_data).length
     
-    if (len === 0) {
-        player_data['p1'] = {};
+    if (len === 0) {    
+        player_data['p1'] = {b: '1', i: '0', j: '0'};
         socket.emit('player_assignment', 'p1');
     } else if (len === 1) {
         socket.emit('player_assignment', 'p2');
-        
+        player_data['p2'] = {b: '1', i: '0', j: '1'};
         // If we have two players, let's load our call number data
         
         var rand_index = Math.floor(Math.random() * (15 - 0 + 1)) + 0;
@@ -65,7 +65,7 @@ io.on('connection', function(socket){
               p2: [{title: to_shelve_formatted.docs[0].title, call_num: to_shelve_formatted.docs[0].source_record['090a']}]}
               
               io.sockets.emit('shelve_list', shelve_list);
-              
+                      io.sockets.emit('board_update', player_data);
           });
         };
 
