@@ -26,8 +26,17 @@
 }
 
 .stairs {
-  background-color:gray;
+  /*background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/stairs.png") no-repeat #efefef;*/
 }
+
+.stairs-up {
+  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/stairs-up.png") no-repeat #efefef;
+}
+
+.stairs-down {
+  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/stairs-down.png") no-repeat #efefef;
+}
+
 
 .tile-row {
 	clear:left;
@@ -38,7 +47,13 @@
 }
 
 .shelf {
-  background-color: #894200;
+  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books.png") repeat-x #894200;
+  background-position: 0 1px;
+}
+
+.shelf-east {
+  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books-east.png") repeat-y #894200;
+  background-position: 5px 1px;
 }
 
 .endcap {
@@ -58,7 +73,7 @@
 }
 
 #dashboard {
-  padding:0 35px;
+  padding:20px 45px 0 45px;
   position: absolute;
   top: 35px;
   left:295px;

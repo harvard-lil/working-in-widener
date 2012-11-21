@@ -23,13 +23,16 @@ console.log(data);
                 var n = $('#' + index);
                 $(n).removeAttr("id");
                 $(n).css("background-color","");
-
+                $('#book-cart-' + index).remove();
 
                 var target_i = $('.tile-row')[value.i];
                 var target_tile = $(target_i).children()[value.j];
 
                 $(target_tile).attr('id', index);
                 $(target_tile).css("background-color","#" + index);
+                $(target_tile).append('<img id="book-cart-' + index + '" src="http://hlsl7.law.harvard.edu/dev/annie/game/static/images/book-cart.png">');
+                
+                if(index == player_id) {
                 var tile_position = $(target_tile).position();
                 var callno = $(target_tile).data("callno");
                 $('#callno_sign, #endcap_sign').hide();
@@ -41,6 +44,7 @@ console.log(data);
                 if(sign) { 
                   $('#endcap_sign').show().text(sign);
                   $('#endcap_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                }
                 }
 
             });
@@ -56,6 +60,7 @@ console.log(data);
     // Board setup/game control stuff
     $('.tile:first').attr('id', player_id);
     $('.tile:first').css("background-color","#" + player_id);
+    $('.tile:first').append('<img id="book-cart-' + player_id + '" src="http://hlsl7.law.harvard.edu/dev/annie/game/static/images/book-cart.png">');
 
     $(document).keydown(function(e) {
 
@@ -113,6 +118,8 @@ console.log(data);
                 next_tile = $(next_row).children()[currently_selected_index];
                 break;
             }
+            
+            if(!$(next_tile).hasClass('blocked')){
 
             var i_pl = $(next_tile).parent().index();
             var j_pl = $(next_tile).index();
@@ -120,6 +127,7 @@ console.log(data);
             // Now get the row we're in
             var message = {p: player_id, b: '1', i: i_pl, j: j_pl};
             iosocket.emit('move', message);
+            }
         }
     });
 });
