@@ -16,7 +16,7 @@ $(function() {
     var player_id;
 
     // Socket.io stuff
-    var iosocket = io.connect('http://localhost:3000');	
+    var iosocket = io.connect('http://hlsl7.law.harvard.edu:3000');	
     iosocket.on('connect', function () {
 
         iosocket.on('player_assignment', function(data) {
@@ -42,23 +42,27 @@ console.log(data);
             $.each(data, function(index, value) {
                 var n = $('.' + index);
                 $(n).removeClass(index);
+                $('#book-cart-' + index).remove();
 
                 var target_i = $('.tile-row')[value.i];
                 var target_tile = $(target_i).children()[value.j];
 
                 $(target_tile).addClass(index);
+                $(target_tile).append('<img id="book-cart-' + index + '" src="http://hlsl7.law.harvard.edu/dev/annie/game/static/images/book-cart.png">');
 
-                var tile_position = $(target_tile).position();
-                var callno = $(target_tile).data("callno");
-                $('#callno_sign, #endcap_sign').hide();
-                if(callno) {
-                  $('#callno_sign').show().text(callno);
-                  $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
-                }
-                var sign = $(target_tile).data("sign");
-                if(sign) { 
-                  $('#endcap_sign').show().text(sign);
-                  $('#endcap_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                if(index == player_id) {
+                  var tile_position = $(target_tile).position();
+                  var callno = $(target_tile).data("callno");
+                  $('#callno_sign, #endcap_sign').hide();
+                  if(callno) {
+                    $('#callno_sign').show().text(callno);
+                    $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                  }
+                  var sign = $(target_tile).data("sign");
+                  if(sign) { 
+                    $('#endcap_sign').show().text(sign);
+                    $('#endcap_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                  }
                 }
 
             });
@@ -84,11 +88,6 @@ console.log(data);
             switch(e.keyCode) {
                 case 37: // left
                 next_tile = $(currently_selected).prev('.tile');
-                
-                // If we've reached a wall, don't let the user move
-                if (next_tile.length === 0 || next_tile.hasClass('shelf')) {
-                    next_tile = currently_selected;
-                }
 
                 break;
                 case 38: // up
@@ -106,15 +105,11 @@ console.log(data);
                 }
 
                 next_tile = $(prev_row).children()[currently_selected_index];
-                
-                if ($(next_tile).hasClass('shelf')) {
-                    next_tile = currently_selected;
-                }
 
                 break;
                 case 39: // right
                 var next_tile = $(currently_selected).next('.tile');
-                if (next_tile.length === 0 || next_tile.hasClass('shelf')) {
+                if (next_tile.length === 0) {
                     next_tile = currently_selected;
                 }
 
@@ -134,10 +129,6 @@ console.log(data);
 
                 next_tile = $(next_row).children()[currently_selected_index];
                 
-                if ($(next_tile).hasClass('shelf')) {
-                    next_tile = currently_selected;
-                }
-                
                 break;
             }
 
@@ -151,7 +142,8 @@ console.log(data);
                 
                             
             // Sometimes we don't actually move (when a user tries to walk into a wall)
-            if (currently_selected !== next_tile){
+            //if (currently_selected !== next_tile){
+            if(!$(next_tile).hasClass('blocked')){
 
                 iosocket.emit('move', message);
             }
