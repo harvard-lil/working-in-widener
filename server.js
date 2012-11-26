@@ -156,8 +156,13 @@ io.on('connection', function(socket){
  		rooms[data.r].player_info[data.p].name = data;
     });
     
+    socket.on('shelved', function (data) {
+ 		  io.sockets.in(data.r).emit('progress_update', data);
+    });
+    
     socket.on('completed', function (data) {
  		  io.sockets.in(data.r).emit('winner', data);
     });
+
 
 })
