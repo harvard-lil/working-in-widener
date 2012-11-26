@@ -16,7 +16,7 @@ $(function() {
         });
 
         var player_id, current_callno, cart_contents, room_id;
-        var current_book = false;
+        var ready = false;
         var current_book = 0;
 
         // Socket.io stuff
@@ -25,12 +25,6 @@ $(function() {
 
             iosocket.on('player_assignment', function(data) {
                 player_id = data;
-                opponent_id = 'p1';
-                if(player_id == 'p1') opponent_id = 'p2';
-                $('#player_id').append(' ( ' + player_id + ' )');
-                $('#opponent_id').append(' ( ' + opponent_id + ' )');
-                $('#progress').addClass(player_id + 'progress');
-                $('#opponent-progress').addClass(opponent_id + 'progress');
             });
 
             iosocket.on('shelve_list', function(data) {
@@ -75,38 +69,35 @@ $(function() {
                         }
                     }
 
-                });
-
-
-                if(index == player_id) {
-                    var tile_position = $(target_tile).position();
-                    var callno = $(target_tile).data("callno");
-                    $('#callno_sign, #endcap_sign').hide();
-                    if(callno) {
-                        if(callno === current_callno) {
-                            current_book = current_book + 1;
-                            iosocket.emit('shelved', {p: player_id, c: current_book});
-                            console.log('sent ' + current_book);
-                            if(current_book == cart_contents.length) {
-                                iosocket.emit('completed', player_id);
+                    if(index == player_id) {
+                        var tile_position = $(target_tile).position();
+                        var callno = $(target_tile).data("callno");
+                        $('#callno_sign, #endcap_sign').hide();
+                        if(callno) {
+                            if(callno === current_callno) {
+                                current_book = current_book + 1;
+                                iosocket.emit('shelved', {p: player_id, c: current_book});
+                                console.log('sent ' + current_book);
+                                if(current_book == cart_contents.length) {
+                                    iosocket.emit('completed', player_id);
+                                }
+                                else {
+                                    $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
+                                    $('.current-target-callno').fadeOut().delay(500).html(cart_contents[current_book].call_num).fadeIn();
+                                    current_callno = cart_contents[current_book].call_num;
+                                }
                             }
-                            else {
-                                $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
-                                $('.current-target-callno').fadeOut().delay(500).html(cart_contents[current_book].call_num).fadeIn();
-                                current_callno = cart_contents[current_book].call_num;
-                            }
+                            $('#callno_sign').show().text(callno);
+                            $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
                         }
-                        $('#callno_sign').show().text(callno);
-                        $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                        var sign = $(target_tile).data("sign");
+                        if(sign) { 
+                            $('#endcap_sign').show().text(sign);
+                            $('#endcap_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                        }
                     }
-                    var sign = $(target_tile).data("sign");
-                    if(sign) { 
-                        $('#endcap_sign').show().text(sign);
-                        $('#endcap_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
-                    }
-                }
+                });
             });
-
             iosocket.on('ready', function(data) {
                 console.log('received ready emit');
                 console.log(data);
@@ -117,6 +108,9 @@ $(function() {
 
                 $('#your_name').text(data[player_id].name +  ' ( ' + player_id + ' )').addClass(player_id + '-text');
                 $('#opponent_name').text(data[opponent_id].name +  ' ( ' + opponent_id + ' )').addClass(opponent_id + '-text');
+
+                $('#progress').addClass(player_id + 'progress');
+                $('#opponent-progress').addClass(opponent_id + 'progress');
 
                 ready = true;
                 $('#hover').hide();
