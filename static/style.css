@@ -106,3 +106,47 @@
 .p1.p2 {
     background-color: #F00;
 }
+
+.legend {
+  padding:3px;
+  height:200px;
+  width:245px;
+  position:relative;
+  float:left;
+  margin-right:25px;
+  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/legend.png") no-repeat;
+  background-position: 1px 50px;
+}
+
+.legend.current-legend {
+  border:3px solid #00FFFF;
+}
+
+.legend h1 {
+  float:left;
+  margin-bottom:10px;
+}
+
+h1.legend-west {
+  margin-left:10px;
+  margin-right:85px;
+}
+
+h1.legend-east {
+  margin-left:25px;
+}
+
+.legend p {
+  font-size:24px;
+  float:left;
+}
+
+p.legend-west {
+  margin-left:15px;
+  margin-top:10px;
+}
+
+p.legend-east {
+  margin-left:145px;
+  margin-top:10px;
+}
