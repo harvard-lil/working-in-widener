@@ -1,0 +1,5 @@
+{
+    "node_host": "http://localhost",
+    "node_port": 3000,
+    "lc_host": "http://librarycloud.harvard.edu"
+}
