@@ -35,10 +35,19 @@ app.get('/config.json', function (req, res) {
 
 var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q22", "Q223", "Q224", "Q225", "Q226", "DP618", "DP622", "DP624", "DP625", "DP627"];
 var rooms = [];
-var num_items_to_shelve = 2;
+var num_items_to_shelve = 4;
 
 // Socket.io business
 //io.set('loglevel',10) // set log level to get all debug messages
+
+/////////// A helper. Shuffle our lists./////////// 
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/array/shuffle [v1.0]
+
+shuffle = function(o){ //v1.0
+    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
 
 var add_user = function(socket) {
 	// A new user wants to play. If we have an unpaired user waiting, add the
@@ -118,6 +127,11 @@ var build_LibraryCloud_requests = function(room_id) {
 			  // send to our clients. This is the "everything's ready, play" signal
 		      if (num_items_to_shelve === rooms[room_id].to_shelve.p1.length) {
 		          //var packaged_to_shelve_list = {p1: shelve_list, p2: shelve_list};
+
+                  var p1_shuffled_list = shuffle(rooms[room_id].to_shelve.p1);
+                  rooms[room_id].to_shelve.p1 = p1_shuffled_list;
+                  var p2_shuffled_list = shuffle(rooms[room_id].to_shelve.p2);
+                  rooms[room_id].to_shelve.p2 = p2_shuffled_list;
 
 		          io.sockets.in(room_id).emit('shelve_list', rooms[room_id].to_shelve);
 		          io.sockets.in(room_id).emit('board_update', rooms[room_id].player_postions);
