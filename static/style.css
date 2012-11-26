@@ -73,10 +73,10 @@
 }
 
 #dashboard {
-  padding:20px 45px 0 45px;
+  padding:5px 45px 0 45px;
   position: absolute;
-  top: 35px;
-  left:295px;
+  top: 15px;
+  left:300px;
   width:515px;
   height:330px;
 }
@@ -85,6 +85,14 @@
   margin-left: 50px;
   margin-top:5px;
   float:left;
+}
+
+.title {
+  width:265px;
+}
+
+.current-target-callno {
+  font-size:24px;
 }
 
 .left {
@@ -103,16 +111,26 @@
     color: #BED333;
 }
 
-.p1 {
+
+.p1, .p1progress {
     background-color: #34647F;
 }
 
-.p2 {
+.p2, .p2progress {
     background-color: #BED333;
 }
 
 .p1.p2 {
     background-color: #F00;
+}
+
+#progress, #opponent-progress {
+  background-image: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/book-cart-large.png");
+  background-repeat:no-repeat;
+  display:block;
+  height:100px;
+  width:100px;
+  overflow:hidden;
 }
 
 .legend {
@@ -133,6 +151,7 @@
 .legend h1 {
   float:left;
   margin-bottom:10px;
+  margin-top:5px;
 }
 
 h1.legend-west {
