@@ -1,8 +1,8 @@
 $(function() {
 
     // TODO: clean up this list. We'll use the first 15 for our first test
-    var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q22", "Q224", "Q225", "Q226", "Q227", "DP618", "DP622", "DP624", "DP625", "DP627","Q678", "Q679", "Q680", "Q681", "Q682", "DP730", "DP732", "DP746", "DP780", "DP781", "Q625", "Q725", "Q730", "Q732", "Q734", "DP782", "DP790", "DP793", "DP794", "DP795", "Q736", "Q737", "Q739", "Q750", "Q801", "PG12", "PG106", "PG6700", "M433", "M470", "M475", "PG13", "PG222", "PG6718", "M35", "M471", "M479", "PG90", "PG322", "PG6719", "M450", "M472", "M482", "PG94", "PG422", "PG6720", "M451", "M473", "M700", "PG105", "PG523", "PG6722", "M456", "M474", "M809"];
-    var wid_b_endcaps = ["DP612 - DP621", "Q22 - Q227", "DP618 - DP627", "Q625 - Q682", "DP730 - DP781", "Q625 - Q734", "DP782 - DP795", "Q736 - Q801", "PG12 - PG105", "PG106 - PG523", "PG6700 - PG6722", "M433 - M456", "M470 - M474", "M475 - M809"];
+    var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q22", "Q223", "Q224", "Q225", "Q226", "DP618", "DP622", "DP624", "DP625", "DP627","Q678", "Q679", "Q680", "Q681", "Q682", "DP730", "DP732", "DP746", "DP780", "DP781", "Q625", "Q725", "Q730", "Q732", "Q734", "DP782", "DP790", "DP793", "DP794", "DP795", "Q736", "Q737", "Q739", "Q750", "Q801", "PG12", "PG106", "PG6700", "M433", "M470", "M475", "PG13", "PG222", "PG6718", "M35", "M471", "M479", "PG90", "PG322", "PG6719", "M450", "M472", "M482", "PG94", "PG422", "PG6720", "M451", "M473", "M700", "PG105", "PG523", "PG6722", "M456", "M474", "M809"];
+    var wid_b_endcaps = ["DP612 - DP621", "Q22 - Q226", "DP618 - DP627", "Q625 - Q682", "DP730 - DP781", "Q625 - Q734", "DP782 - DP795", "Q736 - Q801", "PG12 - PG105", "PG106 - PG523", "PG6700 - PG6722", "M433 - M456", "M470 - M474", "M475 - M809"];
     $.each(wid_b, function(index, item) {
       $(".aisle:eq(" + index + ")").data("callno", item);
     });
@@ -14,14 +14,20 @@ $(function() {
     // var player_id = Math.floor(Math.random()*16777215).toString(16);
     
     var player_id;
+	var room_id;
 
     // Socket.io stuff
-    var iosocket = io.connect('http://hlsl7.law.harvard.edu:3000');	
+    var iosocket = io.connect('http://localhost:3000');	
     iosocket.on('connect', function () {
 
         iosocket.on('player_assignment', function(data) {
             player_id = data;
             console.log(data)
+        });
+
+        iosocket.on('room_assignment', function(data) {
+            room_id = data;
+            console.log('room id: ' + data);
         });
         
         iosocket.on('shelve_list', function(data) {
@@ -89,6 +95,10 @@ console.log(data);
                 case 37: // left
                 next_tile = $(currently_selected).prev('.tile');
 
+                if (next_tile.length === 0) {
+                    next_tile = currently_selected;
+                }
+
                 break;
                 case 38: // up
 
@@ -136,7 +146,7 @@ console.log(data);
             var j_pl = $(next_tile).index();
 
             // Now get the row we're in
-            var message = {p: player_id, b: '1', i: i_pl, j: j_pl};
+            var message = {p: player_id, r: room_id, b: '1', i: i_pl, j: j_pl};
             
             console.log(message);
                 
