@@ -41,6 +41,7 @@ $(function() {
         });
         
         iosocket.on('shelve_list', function(data) {
+            console.log(data);
             $.each(data[player_id], function(index, value) {
                 $('.title').html(value.title);
                 $('.current-target-callno').html(value.call_num);
