@@ -13,7 +13,7 @@ $(function() {
     // generate a randomish player id. we also use this for color.
     // var player_id = Math.floor(Math.random()*16777215).toString(16);
     
-    var player_id;
+    var player_id, current_callno;
 
     // Socket.io stuff
     var iosocket = io.connect('http://hlsl7.law.harvard.edu:3000');	
@@ -21,6 +21,7 @@ $(function() {
 
         iosocket.on('player_assignment', function(data) {
             player_id = data;
+            $('.identity').text('You are ' + player_id);
             console.log(data)
         });
         
@@ -28,6 +29,7 @@ $(function() {
             $.each(data[player_id], function(index, value) {
                 $('.title').html(value.title);
                 $('.current-target-callno').html(value.call_num);
+                current_callno = value.call_num;
             });
                 
                 //$('.tile:first').addClass('p1');
@@ -54,6 +56,9 @@ console.log(data);
                   var callno = $(target_tile).data("callno");
                   $('#callno_sign, #endcap_sign').hide();
                   if(callno) {
+                    if(callno === current_callno) {
+                      $('#dashboard').text(player_id + ' WINS!').css('font-size', '108px');
+                    }
                     $('#callno_sign').show().text(callno);
                     $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
                   }
