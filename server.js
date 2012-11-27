@@ -35,7 +35,7 @@ app.get('/config.json', function (req, res) {
 
 var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q22", "Q223", "Q224", "Q225", "Q226", "DP618", "DP622", "DP624", "DP625", "DP627"];
 var rooms = [];
-var num_items_to_shelve = 4;
+var num_items_to_shelve = 5;
 
 // Socket.io business
 //io.set('loglevel',10) // set log level to get all debug messages
@@ -87,7 +87,7 @@ var build_LibraryCloud_requests = function(room_id) {
     
     for (var i = 0; i < num_items_to_shelve; i ++) {
         
-        var rand_index = Math.floor(Math.random() * (15 - 0 + 1)) + 0;
+        var rand_index = Math.floor(Math.random() * (15 - 0 - 1)) + 0;
 
         var call_num = wid_b[rand_index];
         
@@ -104,7 +104,7 @@ var build_LibraryCloud_requests = function(room_id) {
         // make the request, and then end it, to close the connection
 		// once we have the request pass it off to our packaging function
 		var req = http.request(options, function(res) {
-			
+			var call_num_searched = call_num;
 			// Receive a response from LibraryCloud, pull out the title and call number
 			// and add it to our list. Do this num_items_to_shelve times.
 
