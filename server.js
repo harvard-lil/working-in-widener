@@ -33,6 +33,10 @@ app.get('/config.json', function (req, res) {
     res.sendfile(__dirname + '/static/config.json');
 });
 
+app.get('/widener-8-bit.png', function (req, res) {
+    res.sendfile(__dirname + '/static/images/widener-8-bit.png');
+});
+
 var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q209", "Q223", "Q224", "Q295", "Q300", "DP622", "DP624", "DP625", "DP627", "DP628","Q305", "Q310", "Q315", "Q310", "Q320", "DP632", "DP635", "DP636", "DP638", "DP639", "Q325", "Q335", "Q336", "Q342", "Q350", "DP640", "DP641", "DP642", "DP646", "DP650", "Q360", "Q365", "Q370", "Q387", "Q390"];
 var rooms = [];
 var num_items_to_shelve = 2;

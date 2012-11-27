@@ -182,20 +182,102 @@ p.legend-east {
     width:100%;
 }
 
-/* Hovering control box */
+.light {
+    	zoom: 1;
+    	filter: alpha(opacity=10);
+    	opacity: 0.1;
+}
+
+/* Hovering control box -- start*/
+
 #hover {
-    
-    width: 400px;
-    height:400px;
-    border: 1px solid #666666;
-   border-radius: 4px;
+    padding: 0 30px 0 30px;
+    width: 800px;
+    height:550px;
+    border: 1px solid #336699;
+    border-radius: 4px;
     text-align: left;
     position: fixed;
     top: 50%;
     left: 50%;
-    margin-left:-200px;
-    margin-top:-200px;
+    margin-left:-400px;
+    margin-top:-275px;
     background-color: #FAFAFA;
     z-index: 10;
+    font-family: arial,helvetica,clean,sans-serif;
+    font-size:.9em;
 }
 
+h1 {
+    color: #FF6600;
+    font-size: 4.8em;
+    line-height: 0;
+    padding: 15px 0 30px 0;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    max-width:375px;
+    float: right;
+}
+
+#hover h2{
+    line-height: 0;
+    font-size: 1.7em;
+}
+
+ul {
+    padding: 0 0 0 25px;
+}
+
+ul li {
+    padding: 4px;
+}
+
+ul li:first-child {
+    padding-top: 11px;
+}
+
+#message-panel{
+    clear: both;
+    padding: 50px 0 0 150px;;
+}
+
+.status-update {
+    font-size:2.3em;
+}
+
+/* form stuff -- start */
+#player-handle {
+    height:2.2em;
+    line-height:2.2em;
+    font-size:1.4em;
+    width: 350px;
+}
+
+.button {
+    background-color: #3399FF;
+    display: inline-block;
+    color: white !important;
+    font-weight: bold;
+    line-height: 1.6em;
+    text-decoration: none;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-box-shadow: 0 1px 3px #3399FF;
+    -webkit-box-shadow: 0 1px 3px #3399FF;
+    text-shadow: 0 -1px 1px #3399FF;
+    border-bottom: 1px solid #3399FF;
+    position: relative;
+    cursor: pointer;
+    overflow: visible;
+    width: auto;
+    font-size: 1.5em;
+    padding: 8px 19px 9px;
+}
+/* form stuff -- end */
+
+/* Hovering control box -- end*/

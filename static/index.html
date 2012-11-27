@@ -12,13 +12,31 @@
 <body>
 	<div id="wrapper">
 	<div id="hover">
-		<form id="name-form">
-			<input type="text" id="player-handle"/>
-			<input type="submit" value="Play"/>
-		</form>
+		<h1>Working in Widener</h1>
+		<div>
+			<span class="left">
+				<img src="/widener-8-bit.png">
+			</span>
+			<span class="right">
+				<h2>It is a simple game:</h2>
+				<ul>
+					<li>Two players. You against a live person.</li>
+					<li>Players are assigned five books to shelve. Different orders.</li>
+					<li>Use the keyboard arrows to move.</li>
+					<li>Walk in front of the correct stack to shelve the book.</li>
+					<li>Walk on the stairs to change floors.</li>
+				<ul>
+			</span>
+		</div>
+		<div id="message-panel">
+			<form id="name-form">
+				<input type="text" id="player-handle" placeholder="Enter your character's name"/>
+				<input type="submit" value="Play" class="button"/>
+			</form>
+		</div>
 		<div id="start-status"></div>
 	</div>
-    
+    <div id="main" class="light">
   <div id="callno_sign">PS617</div>
   <div id="endcap_sign">PS610 - PS613</div>
   <div id="dashboard">
@@ -706,6 +724,7 @@
 		  <p class="legend-west">P</p>
 		</div>
 	</div> <!-- end container -->
+	</div> <!-- end main >
 		</div> <!-- end wrapper -->
 </body>
 </html>

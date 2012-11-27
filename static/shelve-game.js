@@ -94,7 +94,9 @@ $(function() {
                 $('#opponent-progress').addClass(opponent_id + 'progress');
 
                 ready = true;
+                $('#main').removeClass('light');
                 $('#hover').hide();
+
             });
 
             iosocket.on('progress_update', function(data) { console.log('updating ' + data.c);
@@ -105,7 +107,8 @@ $(function() {
         iosocket.on('winner', function(data) {
             ready = false;
             iosocket.disconnect()
-            $('#start-status').html(data + ' WINS!' + '<br /><a href=".">Start a new game?</a>');
+            $('#start-status').html(data + ' WINS! <a href=".">Start a new game?</a>').addClass('status-update');
+            $('#main').addClass('light');
             $('#hover').show();
             //$('#dashboard').text(data + ' WINS!').css('font-size', '108px');
         });
@@ -191,11 +194,18 @@ $(function() {
 
     // On load, we display a hover panel. Get user's name and ask them to hit play.
     $('#name-form').submit(function() {
-        var message = {p: player_id, r: room_id, name: $('#player-handle').val()};
-        iosocket.emit('name-update', message);
-        $('#start-status').text('Waiting for your challenger.');
-        $('#name-form').hide();
+        if ($('#player-handle').val() !== "") {
+            var message = {p: player_id, r: room_id, name: $('#player-handle').val()};
+            iosocket.emit('name-update', message);
+            $('#start-status').text('Waiting for your challenger.').addClass('status-update');
+            $('#name-form').hide();
+        } else{
+            // The box loses focus. refocus.
+             $("#player-handle").focus();
+        }
         return false;
     });
+    
+     $("#player-handle").focus();
 });
 });
