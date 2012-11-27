@@ -10,11 +10,20 @@
     <script src="/shelve-game.js"></script>
 </head>
 <body>
+	<div id="wrapper">
+	<div id="hover">
+		<form id="name-form">
+			<input type="text" id="player-handle"/>
+			<input type="submit" value="Play"/>
+		</form>
+		<div id="start-status"></div>
+	</div>
+    
   <div id="callno_sign">PS617</div>
   <div id="endcap_sign">PS610 - PS613</div>
   <div id="dashboard">
     <div class="left">
-      <h3 id="player_id"></h3>
+      <h3 id="your_name"></h3>
       <span id="progress"></span>
     </div>
     <div class="current-target">
@@ -22,7 +31,7 @@
       <p class="current-target-callno">DP613</p>
     </div>
     <div class="clear"></div>
-    <h3 id="opponent_id"></h3>
+    <h3 id="opponent_name"></h3>
     <span id="opponent-progress"></span>
 	</div>
 	<div id="container">
@@ -697,5 +706,6 @@
 		  <p class="legend-west">P</p>
 		</div>
 	</div> <!-- end container -->
+		</div> <!-- end wrapper -->
 </body>
 </html>

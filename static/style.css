@@ -103,6 +103,15 @@
   clear:both;
 }
 
+.p1-text {
+    color: #34647F;
+}
+
+.p2-text {
+    color: #BED333;
+}
+
+
 .p1, .p1progress {
     background-color: #34647F;
 }
@@ -168,3 +177,25 @@ p.legend-east {
   margin-left:145px;
   margin-top:10px;
 }
+
+#wrapper {
+    width:100%;
+}
+
+/* Hovering control box */
+#hover {
+    
+    width: 400px;
+    height:400px;
+    border: 1px solid #666666;
+   border-radius: 4px;
+    text-align: left;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left:-200px;
+    margin-top:-200px;
+    background-color: #FAFAFA;
+    z-index: 10;
+}
+

@@ -33,7 +33,7 @@ app.get('/config.json', function (req, res) {
     res.sendfile(__dirname + '/static/config.json');
 });
 
-var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q22", "Q223", "Q224", "Q225", "Q226", "DP618", "DP622", "DP624", "DP625", "DP627"];
+var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q209", "Q223", "Q224", "Q295", "Q300", "DP622", "DP624", "DP625", "DP627", "DP628","Q305", "Q310", "Q315", "Q310", "Q320", "DP632", "DP635", "DP636", "DP638", "DP639", "Q325", "Q335", "Q336", "Q342", "Q350", "DP640", "DP641", "DP642", "DP646", "DP650", "Q360", "Q365", "Q370", "Q387", "Q390"];
 var rooms = [];
 var num_items_to_shelve = 5;
 
@@ -72,7 +72,7 @@ var add_user = function(socket) {
 	
 	// If we didn't find a pair. Create a new room and add player 1 to it.
 	var room_id = Math.floor(Math.random()*89999+10000);
-	rooms[room_id] = {player_postions: {p1: {b: '1', i: '0', j: '0'}, p2: {}}, to_shelve: {p1: [], p2: []}, player_info:{p1: {name: "Player 1"}, p2: {name: "Player 2"}}};
+	rooms[room_id] = {player_postions: {p1: {b: '1', i: '0', j: '0'}, p2: {}}, to_shelve: {p1: [], p2: []}, player_info:{p1: {name: ""}, p2: {name: ""}}};
 
 	socket.join(room_id);
     socket.emit('player_assignment', 'p1');
@@ -87,7 +87,7 @@ var build_LibraryCloud_requests = function(room_id) {
     
     for (var i = 0; i < num_items_to_shelve; i ++) {
         
-        var rand_index = Math.floor(Math.random() * (15 - 0 - 1)) + 0;
+        var rand_index = Math.floor(Math.random() * (39 - 0 + 1)) + 0;
 
         var call_num = wid_b[rand_index];
         
@@ -99,7 +99,7 @@ var build_LibraryCloud_requests = function(room_id) {
           method: 'GET'
         };
     
-        //console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '*&limit=1');
+        console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '*&limit=1');
     
         // make the request, and then end it, to close the connection
 		// once we have the request pass it off to our packaging function
@@ -134,7 +134,6 @@ var build_LibraryCloud_requests = function(room_id) {
                   rooms[room_id].to_shelve.p2 = p2_shuffled_list;
 
 		          io.sockets.in(room_id).emit('shelve_list', rooms[room_id].to_shelve);
-		          io.sockets.in(room_id).emit('board_update', rooms[room_id].player_postions);
 		      }
 		  });
 			
@@ -155,10 +154,8 @@ io.on('connection', function(socket){
     if (room_id !== false) {
 		build_LibraryCloud_requests(room_id);
     }
-
     
     socket.on('move', function (data) {
-
 		rooms[data.r].player_postions[data.p] = {b: data.b, i: data.i, j: data.j};
 		
         // Send to the sender and then to everyone else in the room.
@@ -167,7 +164,12 @@ io.on('connection', function(socket){
     });
 
     socket.on('name-update', function (data) {
- 		rooms[data.r].player_info[data.p].name = data;
+ 		rooms[data.r].player_info[data.p].name = data.name;
+ 		
+ 		if(rooms[data.r].player_info.p1.name !== "" && rooms[data.r].player_info.p2.name !== "") {
+ 		    io.sockets.in(room_id).emit('board_update', rooms[data.r].player_postions);
+ 		    io.sockets.in(room_id).emit('ready', rooms[data.r].player_info);
+	    }
     });
     
     socket.on('shelved', function (data) {
