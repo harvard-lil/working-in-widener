@@ -3,6 +3,7 @@
 	float: left;
 	width: 35px;
 	height: 35px;
+	overflow:hidden;
 }
 
 .west-wall {
@@ -111,7 +112,6 @@
     color: #BED333;
 }
 
-
 .p1, .p1progress {
     background-color: #34647F;
 }
@@ -122,6 +122,11 @@
 
 .p1.p2 {
     background-color: #F00;
+}
+
+.p1.tile, .p2.tile {
+  background-image: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/book-cart-small.png");
+  background-repeat:no-repeat;
 }
 
 #progress, #opponent-progress {

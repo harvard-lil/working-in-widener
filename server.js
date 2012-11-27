@@ -92,7 +92,7 @@ var build_LibraryCloud_requests = function(room_id) {
     
     for (var i = 0; i < num_items_to_shelve; i ++) {
         
-        var rand_index = Math.floor(Math.random() * (279 - 0 + 1)) + 0;
+        var rand_index = Math.floor(Math.random() * (69 - 0 + 1)) + 0;
 
         var call_num = wid[rand_index];
         
@@ -161,7 +161,7 @@ io.on('connection', function(socket){
     }
     
     socket.on('move', function (data) {
-		rooms[data.r].player_postions[data.p] = {b: data.b, i: data.i, j: data.j};
+		rooms[data.r].player_postions[data.p] = {b: data.b, i: data.i, j: data.j, c: data.c};
 		
         // Send to the sender and then to everyone else in the room.
 		// You've got to serve the servants.
