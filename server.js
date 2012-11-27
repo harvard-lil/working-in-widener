@@ -33,7 +33,7 @@ app.get('/config.json', function (req, res) {
     res.sendfile(__dirname + '/static/config.json');
 });
 
-var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q209", "Q223", "Q224", "Q295", "Q300", "DP622", "DP624", "DP625", "DP627", "DP628","Q305", "Q310", "Q315", "Q310", "Q320", "DP632", "DP635", "DP636", "DP638", "DP639", "Q325", "Q335", "Q336", "Q342", "Q350", "DP640", "DP641", "DP642", "DP646", "DP650", "Q360", "Q365", "Q370", "Q387", "Q390"];
+var wid = {'b' : ["DP612", "DP614", "DP615", "DP618", "DP621", "Q209", "Q223", "Q224", "Q295", "Q300", "DP622", "DP624", "DP625", "DP627", "DP628","Q305", "Q310", "Q315", "Q310", "Q320", "DP632", "DP635", "DP636", "DP638", "DP639", "Q325", "Q335", "Q336", "Q342", "Q350", "DP640", "DP641", "DP642", "DP646", "DP650", "Q360", "Q365", "Q370", "Q387", "Q390", "PG13", "PG135", "PG510", "M2", "M32", "M1503", "PG14", "PG303", "PG3223", "M21", "M1490", "M1507", "PG127", "PG305", "PG3225", "M24", "M1495", "M1509", "PG129", "PG406", "PG3235", "M25", "M1497", "M1513", "PG133", "PG507", "PG3435", "M30", "M1500", "M1518"], 'a' : ["PH101", "PH107", "PH123", "PH124", "PH125", "BR450", "BR470", "BR479", "BR481", "BR500", "PH131", "PH135", "PH139", "PH159", "PH161","BR510", "BR515", "BR516", "BR516.5", "BR517", "PH225", "PH235", "PH241", "PH275", "PH279", "BR520", "BR525", "BR526", "BR530", "BR535", "PH285", "PH300", "PH301", "PH302", "PH303", "BR555", "BR560", "BR563", "BR570", "BR620", "DK403", "DK430", "DK439", "PB2369", "PB2813", "PB2856", "DK404", "DK432", "DK440", "PB2591", "PB2815", "PB2887", "DK411", "DK434", "DK441", "PB2808", "PB2831", "PB2891", "DK418", "DK435.5", "DK443", "PB2809", "PB2837", "PB2905", "DK420", "DK436", "DK448", "PB2811", "PB2839", "PB2931"]};
 var rooms = [];
 var num_items_to_shelve = 5;
 
@@ -87,19 +87,19 @@ var build_LibraryCloud_requests = function(room_id) {
     
     for (var i = 0; i < num_items_to_shelve; i ++) {
         
-        var rand_index = Math.floor(Math.random() * (39 - 0 + 1)) + 0;
+        var rand_index = Math.floor(Math.random() * (69 - 0 + 1)) + 0;
 
-        var call_num = wid_b[rand_index];
+        var call_num = wid.a[rand_index];
         
         var options = {
           //host: 'librarycloud.harvard.edu',
           host: 'hlsl8.law.harvard.edu',
           port: 80,
-          path: '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '*&limit=1',
+          path: '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1',
           method: 'GET'
         };
     
-        console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '*&limit=1');
+        console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1');
     
         // make the request, and then end it, to close the connection
 		// once we have the request pass it off to our packaging function
