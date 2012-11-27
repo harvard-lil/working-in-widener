@@ -35,7 +35,7 @@ app.get('/config.json', function (req, res) {
 
 var wid_b = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q209", "Q223", "Q224", "Q295", "Q300", "DP622", "DP624", "DP625", "DP627", "DP628","Q305", "Q310", "Q315", "Q310", "Q320", "DP632", "DP635", "DP636", "DP638", "DP639", "Q325", "Q335", "Q336", "Q342", "Q350", "DP640", "DP641", "DP642", "DP646", "DP650", "Q360", "Q365", "Q370", "Q387", "Q390"];
 var rooms = [];
-var num_items_to_shelve = 5;
+var num_items_to_shelve = 2;
 
 // Socket.io business
 //io.set('loglevel',10) // set log level to get all debug messages
@@ -177,8 +177,12 @@ io.on('connection', function(socket){
     });
     
     socket.on('completed', function (data) {
- 		  io.sockets.in(data.r).emit('winner', data);
+ 		  io.sockets.in(data.r).emit('winner', rooms[data.r].player_info[data.p].name);
+ 		  console.log(data);
+
+ 		  //console.log('kicking everyone out of the room: ' + data.r);
+ 		  
+ 		  // We have a winner. Kick everyone out of the room
+          //io.sockets.in(data.r).leave(data.r);
     });
-
-
 })

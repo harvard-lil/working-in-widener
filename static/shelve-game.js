@@ -60,7 +60,7 @@ $(function() {
                                 current_book = current_book + 1;
                                 iosocket.emit('shelved', {p: player_id, c: current_book});
                                 if(current_book == cart_contents.length) {
-                                    iosocket.emit('completed', player_id);
+                                    iosocket.emit('completed', {p: player_id, r: room_id});
                                 }
                                 else {
                                     $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
@@ -103,11 +103,16 @@ $(function() {
         });
 
         iosocket.on('winner', function(data) {
-            $('#dashboard').text(data + ' WINS!').css('font-size', '108px');
+            ready = false;
+            iosocket.disconnect()
+            $('#start-status').html(data + ' WINS!' + '<br /><a href=".">Start a new game?</a>');
+            $('#hover').show();
+            //$('#dashboard').text(data + ' WINS!').css('font-size', '108px');
         });
 
 
         iosocket.on('disconnect', function() {
+
             console.log('disconnected');
         });
     });
@@ -188,7 +193,7 @@ $(function() {
     $('#name-form').submit(function() {
         var message = {p: player_id, r: room_id, name: $('#player-handle').val()};
         iosocket.emit('name-update', message);
-        $('#start-status').text('Waiting for your challenger.')
+        $('#start-status').text('Waiting for your challenger.');
         $('#name-form').hide();
         return false;
     });
