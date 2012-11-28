@@ -92,7 +92,7 @@ var build_LibraryCloud_requests = function(room_id) {
     
     for (var i = 0; i < num_items_to_shelve; i ++) {
         
-        var rand_index = Math.floor(Math.random() * (69 - 0 + 1)) + 0;
+        var rand_index = Math.floor(Math.random() * (279 - 0 + 1)) + 0;
 
         var call_num = wid[rand_index];
         

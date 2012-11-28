@@ -1,5 +1,6 @@
 body {
   font-family: 'Strait', arial, serif;
+  color: #35235D;
 }
 
 .tile {
@@ -11,23 +12,23 @@ body {
 }
 
 .west-wall {
-  border-left:solid 1px;
+  border-left:solid 1px #0b0713;
 }
 
 .east-wall {
-  border-right:solid 1px;
+  border-right:solid 1px #0b0713;
 }
 
 .north-wall {
-  border-top: solid 1px;
+  border-top: solid 1px #0b0713;
 }
 
 .south-wall {
-  border-bottom: solid 1px;
+  border-bottom: solid 1px #0b0713;
 }
 
-.aisle {
-  /*background-color: #EBDDC0;*/
+.tunnel {
+  width: 37px;
 }
 
 .stairs {
@@ -52,12 +53,17 @@ body {
 }
 
 .shelf {
-  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books.png") repeat-x #894200;
+  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books.png") repeat-x #35235D;
   background-position: 0 1px;
 }
 
 .shelf-east {
-  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books-east.png") repeat-y #894200;
+  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books-east.png") repeat-y #35235D;
+  background-position: 1px 1px;
+}
+
+.shelf-west {
+  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books-west.png") repeat-y #35235D;
   background-position: 5px 1px;
 }
 
@@ -109,19 +115,19 @@ body {
 }
 
 .p1-text {
-    color: #34647F;
+    color: #CB2402;
 }
 
 .p2-text {
-    color: #BED333;
+    color: #4C49A2;
 }
 
 .p1, .p1progress {
-    background-color: #34647F;
+    background-color: #CB2402;
 }
 
 .p2, .p2progress {
-    background-color: #BED333;
+    background-color: #4C49A2;
 }
 
 .p1.p2 {
@@ -154,7 +160,7 @@ body {
 }
 
 .legend.current-legend {
-  border:3px solid #00FFFF;
+  border:3px solid #B8DC3C;
 }
 
 .legend h1 {
@@ -204,7 +210,7 @@ p.legend-east {
     padding: 0 30px 0 30px;
     width: 800px;
     height:550px;
-    border: 1px solid #336699;
+    border: 1px solid #4C49A2;
     border-radius: 4px;
     text-align: left;
     position: fixed;
@@ -214,12 +220,11 @@ p.legend-east {
     margin-top:-275px;
     background-color: #FAFAFA;
     z-index: 10;
-    font-family: arial,helvetica,clean,sans-serif;
-    font-size:.9em;
+    font-size:1.2em;
 }
 
 h1 {
-    color: #FF6600;
+    color: #35235D;
     font-size: 4.8em;
     line-height: 0;
     padding: 15px 0 30px 0;
@@ -245,6 +250,7 @@ ul {
 
 ul li {
     padding: 4px;
+    font-size:1.1em;
 }
 
 ul li:first-child {
@@ -253,7 +259,7 @@ ul li:first-child {
 
 #message-panel{
     clear: both;
-    padding: 50px 0 0 150px;;
+    padding: 30px 0 0 150px;;
 }
 
 .status-update {
@@ -265,11 +271,11 @@ ul li:first-child {
     height:2.2em;
     line-height:2.2em;
     font-size:1.4em;
-    width: 350px;
+    width: 375px;
 }
 
 .button {
-    background-color: #3399FF;
+    background-color: #4C49A2;
     display: inline-block;
     color: white !important;
     font-weight: bold;
@@ -277,10 +283,10 @@ ul li:first-child {
     text-decoration: none;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    -moz-box-shadow: 0 1px 3px #3399FF;
-    -webkit-box-shadow: 0 1px 3px #3399FF;
-    text-shadow: 0 -1px 1px #3399FF;
-    border-bottom: 1px solid #3399FF;
+    -moz-box-shadow: 0 1px 3px #4C49A2;
+    -webkit-box-shadow: 0 1px 3px #4C49A2;
+    text-shadow: 0 -1px 1px #4C49A2;
+    border-bottom: 1px solid #4C49A2;
     position: relative;
     cursor: pointer;
     overflow: visible;
