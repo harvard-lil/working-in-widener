@@ -27,6 +27,7 @@ $(function() {
                 cart_contents = data[player_id];
                 $('.title').html(cart_contents[current_book].title);
                 $('.current-target-callno').html(cart_contents[current_book].call_num);
+                $('.creator').html('by ' + cart_contents[current_book].creator);
                 current_callno = cart_contents[current_book].call_num;
             });
 
@@ -176,6 +177,7 @@ $(function() {
                             else {
                                 $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
                                 $('.current-target-callno').fadeOut().delay(500).html(cart_contents[current_book].call_num).fadeIn();
+                                $('.creator').fadeOut().delay(500).html(cart_contents[current_book].creator).fadeIn();
                                 current_callno = cart_contents[current_book].call_num;
                             }
                         }

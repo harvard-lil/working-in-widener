@@ -68,7 +68,7 @@ var add_user = function(socket) {
 			socket.emit('player_assignment', 'p2');
 			socket.emit('room_assignment', key);
 			socket.join(key);
-			var player_data = {b: 1, i: 0, j: 1};
+			var player_data = {b: 2, i: 0, j: 1};
 			rooms[key].player_postions.p2 = player_data;
 
 			return key;
@@ -77,7 +77,7 @@ var add_user = function(socket) {
 	
 	// If we didn't find a pair. Create a new room and add player 1 to it.
 	var room_id = Math.floor(Math.random()*89999+10000);
-	rooms[room_id] = {player_postions: {p1: {b: 1, i: 0, j: 0}, p2: {}}, to_shelve: {p1: [], p2: []}, player_info:{p1: {name: ""}, p2: {name: ""}}};
+	rooms[room_id] = {player_postions: {p1: {b: 2, i: 0, j: 0}, p2: {}}, to_shelve: {p1: [], p2: []}, player_info:{p1: {name: ""}, p2: {name: ""}}};
 
 	socket.join(room_id);
     socket.emit('player_assignment', 'p1');
@@ -124,8 +124,14 @@ var build_LibraryCloud_requests = function(room_id) {
 		  res.on('end', function() {
 		      var to_shelve_formatted = JSON.parse(to_shelve_raw);
 
-		      rooms[room_id].to_shelve.p1.push({title: to_shelve_formatted.docs[0].title, call_num: to_shelve_formatted.docs[0].source_record['090a']});
-		      rooms[room_id].to_shelve.p2.push({title: to_shelve_formatted.docs[0].title, call_num: to_shelve_formatted.docs[0].source_record['090a']});
+              var creator = '(No Creator)';
+              
+              if (to_shelve_formatted.docs[0].creator[0]) {
+                  creator = to_shelve_formatted.docs[0].creator[0];
+              }
+
+		      rooms[room_id].to_shelve.p1.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
+		      rooms[room_id].to_shelve.p2.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
 
 			  // We want num_items_to_shelve items. This is the number of things we're going
 			  // to ask our players to shelve. Once we have all the requests from LibraryCloud,
