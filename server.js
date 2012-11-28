@@ -104,7 +104,7 @@ var build_LibraryCloud_requests = function(room_id) {
           method: 'GET'
         };
     
-        console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1');
+        //console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1');
     
         // make the request, and then end it, to close the connection
 		// once we have the request pass it off to our packaging function

@@ -31,6 +31,26 @@ body {
   width: 37px;
 }
 
+.west-bridge-wall {
+  border-left: solid 1px;
+}
+
+.east-bridge-wall {
+  border-right: solid 1px;
+}
+
+.north-bridge-wall {
+  border-top: solid 1px;
+}
+
+.south-bridge-wall {
+  border-bottom: solid 1px;
+}
+
+.aisle {
+  /*background-color: #EBDDC0;*/
+}
+
 .stairs {
   /*background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/stairs.png") no-repeat #efefef;*/
 }
