@@ -57,6 +57,21 @@ $(function() {
                         $('.stairs-down-disabled').addClass('stairs-down').removeClass('stairs-down-disabled');
                     }
                     
+                    if (current_board === 1) {
+                        $('.bridge').addClass('blocked');
+                        $('.north-bridge-wall').addClass('north-bridge-wall-disabled').removeClass('north-bridge-wall');
+                        $('.west-bridge-wall-disabled').addClass('west-bridge-wall').removeClass('west-bridge-wall-disabled');
+                        $('.south-bridge-wall').addClass('south-bridge-wall-disabled').removeClass('south-bridge-wall');
+                        $('.east-bridge-wall-disabled').addClass('east-bridge-wall').removeClass('east-bridge-wall-disabled');
+                        
+                    } else {
+                        $('.bridge').removeClass('blocked');
+                        $('.north-bridge-wall-disabled').addClass('north-bridge-wall').removeClass('north-bridge-wall-disabled');
+                        $('.west-bridge-wall').addClass('west-bridge-wall-disabled').removeClass('west-bridge-wall');
+                        $('.south-bridge-wall-disabled').addClass('south-bridge-wall').removeClass('south-bridge-wall-disabled');
+                        $('.east-bridge-wall').addClass('east-bridge-wall-disabled').removeClass('east-bridge-wall');
+                    }
+                    
                     if (current_board === 3) {
                         $('.stairs-up').addClass('stairs-up-disabled').removeClass('stairs-up');
                     } else {
@@ -65,15 +80,23 @@ $(function() {
                 }
 
                 $.each(data, function(index, value) { 
-                    var n = $('.' + index);
-                    $(n).removeClass(index);
-                    
+
                     var target_i = $('.tile-row')[value.i];
                     var target_tile = $(target_i).children()[value.j];
 
-                    $(target_tile).addClass(index);
-                    $(target_tile).css('background-position', '0px -' + 35 * value.c + 'px');
+                    // If our opponent is not on our board, don't draw them
+                    if (value.b === current_board ) {
+                        var n = $('.' + index);
+                        $(n).removeClass(index);
+                    
+                        $(target_tile).addClass(index);
+                        $(target_tile).css('background-position', '0px -' + 35 * value.c + 'px');
 
+                    } else {
+                        $('.' + index).removeClass(index);
+                        //$(target_tile).css('background-position', '0px -' + 35 * value.c + 'px');
+                    }
+                    
                     if(index == player_id) {
                         var tile_position = $(target_tile).position();
                         var callno = $(target_tile).data("callno");
@@ -138,8 +161,7 @@ $(function() {
 
 
         iosocket.on('disconnect', function() {
-
-            console.log('disconnected');
+            //console.log('disconnected');
         });
     });
 
