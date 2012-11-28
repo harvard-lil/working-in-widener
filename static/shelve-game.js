@@ -5,17 +5,12 @@ $(function() {
     $.getJSON("/config.json", function(json) {
         config = json;
 
-        // TODO: clean up this list. We'll use the first 15 for our first test
-        var wid = {'b' : ["DP612", "DP614", "DP615", "DP618", "DP621", "Q209", "Q223", "Q224", "Q295", "Q300", "DP622", "DP624", "DP625", "DP627", "DP628","Q305", "Q310", "Q315", "Q310", "Q320", "DP632", "DP635", "DP636", "DP638", "DP639", "Q325", "Q335", "Q336", "Q342", "Q350", "DP640", "DP641", "DP642", "DP646", "DP650", "Q360", "Q365", "Q370", "Q387", "Q390", "PG13", "PG135", "PG510", "M2", "M32", "M1503", "PG14", "PG303", "PG3223", "M21", "M1490", "M1507", "PG127", "PG305", "PG3225", "M24", "M1495", "M1509", "PG129", "PG406", "PG3235", "M25", "M1497", "M1513", "PG133", "PG507", "PG3435", "M30", "M1500", "M1518"], 'a' : ["PH101", "PH107", "PH123", "PH124", "PH125", "BR450", "BR470", "BR479", "BR481", "BR500", "PH131", "PH135", "PH139", "PH159", "PH161","BR510", "BR515", "BR516", "BR516.5", "BR517", "PH225", "PH235", "PH241", "PH275", "PH279", "BR520", "BR525", "BR526", "BR530", "BR535", "PH285", "PH300", "PH301", "PH302", "PH303", "BR555", "BR560", "BR563", "BR570", "BR620", "DK403", "DK430", "DK439", "PB2369", "PB2813", "PB2856", "DK404", "DK432", "DK440", "PB2591", "PB2815", "PB2887", "DK411", "DK434", "DK441", "PB2808", "PB2831", "PB2891", "DK418", "DK435.5", "DK443", "PB2809", "PB2837", "PB2905", "DK420", "DK436", "DK448", "PB2811", "PB2839", "PB2931"], 'one' : ["PN441", "PN451", "PN452", "PN453", "PN457", "DA3", "DA10", "DA11", "DA13", "DA16", "PN462", "PN466", "PN471", "PN472", "PN479","DA17", "DA18", "DA25", "DA26", "DA27", "PN481", "PN495", "PN500", "PN501", "PN503", "DA27.5", "DA28", "DA28.1", "DA28.2", "DA28.3", "PN504", "PN505", "PN507", "PN508", "PN509", "DA28.4", "DA28.7", "DA30", "DA32", "DA34", "F200", "F273", "F311", "E621", "E647", "E661", "F225", "F285", "F314", "E628", "E649", "E664", "F226", "F286", "F345", "E631", "E655", "E667", "F227", "F289", "F351", "E635", "E656", "E668", "F272", "F310", "F370", "E641", "E660", "E672"], 'two' : ["PM731", "PM782", "PM921", "PM987", "PM988", "PS146", "PS147", "PS151", "PS152", "PS157", "PM989", "PM1021", "PM1022", "PM1023", "PM1024","PS163", "PS185", "PS201", "PS208", "PS211", "PM1272", "PM1855", "PM1883", "PM2073", "PM2076", "PS214", "PS221", "PS223", "PS225", "PS229", "PM2135", "PM2342", "PM2501", "PM2591", "PM3007", "PS243", "PS261", "PS271", "PS273", "PS277", "P361", "P375", "P501", "PS301", "PS323.5", "PS350", "P365", "P380", "P505", "PS303", "PS324", "PS351", "P367", "P381", "P511", "PS305", "PS325", "PS352", "P368", "P408", "P512", "PS316", "PS326", "PS369", "P371", "P409", "P525", "PS319", "PS332", "PS371"]};
-        var wid_endcaps = {"b" : ["DP612 - DP621", "Q209 - Q300", "DP622 - DP628", "Q305 - Q320", "DP632 - DP639", "Q325 - Q350", "DP640 - DP650", "Q360 - Q390", "PG13 - PG133", "PG135 - PG507", "PG6700 - PG6722", "M2 - M30", "M32 - M1500", "M1503 - M1518"], "a" : ["PH101 - PH125", "BR450 - BR500", "PH131 - PH161", "BR510 - BR517", "PH225 - PH279", "BR520 - BR535", "PH285 - PH303", "BR555 - BR620", "DK403 - DK420", "DK430 - DK436", "DK439 - DK448", "PB2369 - PB2811", "PB2813 - PB2839", "PB2856 - PB2931"], "one" : ["PN441 - PN457", "DA3 - DA16", "PN462 - PN479", "DA17 - DA27", "PN481 - PN503", "DA27.5 - DA28.3", "PN504 - PN509", "DA28.4 - DA34", "F200 - F272", "F273 - F370", "F311 - F370", "E621 - E641", "E647 - E660", "E661 - E672"], "two" : ["PM731 - PM988", "PS146 - PS157", "PM989 - PM1024", "PS163 - PS211", "PM1272 - PM2076", "PS214 - PS229", "PM2135 - PM3007", "PS243 - PS277", "P361 - P371", "P375 - P409", "P501 - P525", "PS301 - PS319", "PS323.5 - PS332", "PS350 - PS371"]};
-        $.each(wid.b, function(index, item) {
-            $(".aisle:eq(" + index + ")").data("callno", item);
-        });
-        $.each(wid_endcaps.b, function(index, item) {
-            $(".endcap:eq(" + index + ")").data("sign", item);
-        });
+        // All of our call numbers and endcaps
+        var wid = {0 : ["DP612", "DP614", "DP615", "DP618", "DP621", "Q209", "Q223", "Q224", "Q295", "Q300", "DP622", "DP624", "DP625", "DP627", "DP628","Q305", "Q310", "Q315", "Q310", "Q320", "DP632", "DP635", "DP636", "DP638", "DP639", "Q325", "Q335", "Q336", "Q342", "Q350", "DP640", "DP641", "DP642", "DP646", "DP650", "Q360", "Q365", "Q370", "Q387", "Q390", "PG13", "PG135", "PG510", "M2", "M32", "M1503", "PG14", "PG303", "PG3223", "M21", "M1490", "M1507", "PG127", "PG305", "PG3225", "M24", "M1495", "M1509", "PG129", "PG406", "PG3235", "M25", "M1497", "M1513", "PG133", "PG507", "PG3435", "M30", "M1500", "M1518"], 1 : ["PH101", "PH107", "PH123", "PH124", "PH125", "BR450", "BR470", "BR479", "BR481", "BR500", "PH131", "PH135", "PH139", "PH159", "PH161","BR510", "BR515", "BR516", "BR516.5", "BR517", "PH225", "PH235", "PH241", "PH275", "PH279", "BR520", "BR525", "BR526", "BR530", "BR535", "PH285", "PH300", "PH301", "PH302", "PH303", "BR555", "BR560", "BR563", "BR570", "BR620", "DK403", "DK430", "DK439", "PB2369", "PB2813", "PB2856", "DK404", "DK432", "DK440", "PB2591", "PB2815", "PB2887", "DK411", "DK434", "DK441", "PB2808", "PB2831", "PB2891", "DK418", "DK435.5", "DK443", "PB2809", "PB2837", "PB2905", "DK420", "DK436", "DK448", "PB2811", "PB2839", "PB2931"], 2 : ["PN441", "PN451", "PN452", "PN453", "PN457", "DA3", "DA10", "DA11", "DA13", "DA16", "PN462", "PN466", "PN471", "PN472", "PN479","DA17", "DA18", "DA25", "DA26", "DA27", "PN481", "PN495", "PN500", "PN501", "PN503", "DA27.5", "DA28", "DA28.1", "DA28.2", "DA28.3", "PN504", "PN505", "PN507", "PN508", "PN509", "DA28.4", "DA28.7", "DA30", "DA32", "DA34", "F200", "F273", "F311", "E621", "E647", "E661", "F225", "F285", "F314", "E628", "E649", "E664", "F226", "F286", "F345", "E631", "E655", "E667", "F227", "F289", "F351", "E635", "E656", "E668", "F272", "F310", "F370", "E641", "E660", "E672"], 3 : ["PM731", "PM782", "PM921", "PM987", "PM988", "PS146", "PS147", "PS151", "PS152", "PS157", "PM989", "PM1021", "PM1022", "PM1023", "PM1024","PS163", "PS185", "PS201", "PS208", "PS211", "PM1272", "PM1855", "PM1883", "PM2073", "PM2076", "PS214", "PS221", "PS223", "PS225", "PS229", "PM2135", "PM2342", "PM2501", "PM2591", "PM3007", "PS243", "PS261", "PS271", "PS273", "PS277", "P361", "P375", "P501", "PS301", "PS323.5", "PS350", "P365", "P380", "P505", "PS303", "PS324", "PS351", "P367", "P381", "P511", "PS305", "PS325", "PS352", "P368", "P408", "P512", "PS316", "PS326", "PS369", "P371", "P409", "P525", "PS319", "PS332", "PS371"]};
+        var wid_endcaps = {0 : ["DP612 - DP621", "Q209 - Q300", "DP622 - DP628", "Q305 - Q320", "DP632 - DP639", "Q325 - Q350", "DP640 - DP650", "Q360 - Q390", "PG13 - PG133", "PG135 - PG507", "PG6700 - PG6722", "M2 - M30", "M32 - M1500", "M1503 - M1518"], 1 : ["PH101 - PH125", "BR450 - BR500", "PH131 - PH161", "BR510 - BR517", "PH225 - PH279", "BR520 - BR535", "PH285 - PH303", "BR555 - BR620", "DK403 - DK420", "DK430 - DK436", "DK439 - DK448", "PB2369 - PB2811", "PB2813 - PB2839", "PB2856 - PB2931"], 2 : ["PN441 - PN457", "DA3 - DA16", "PN462 - PN479", "DA17 - DA27", "PN481 - PN503", "DA27.5 - DA28.3", "PN504 - PN509", "DA28.4 - DA34", "F200 - F272", "F273 - F370", "F311 - F370", "E621 - E641", "E647 - E660", "E661 - E672"], 3 : ["PM731 - PM988", "PS146 - PS157", "PM989 - PM1024", "PS163 - PS211", "PM1272 - PM2076", "PS214 - PS229", "PM2135 - PM3007", "PS243 - PS277", "P361 - P371", "P375 - P409", "P501 - P525", "PS301 - PS319", "PS323.5 - PS332", "PS350 - PS371"]};
 
         var player_id, current_callno, cart_contents, room_id;
+        var current_board = 0;
         var ready = false;
         var current_book = 0;
         $('#progress').data('current-book', current_book);
@@ -40,6 +35,34 @@ $(function() {
             });
 
             iosocket.on('board_update', function(data) {
+                
+                // If we changed boards, redraw all the data elements
+                if (data[player_id].b !== current_board) {
+                    current_board = data[player_id].b;
+                
+                    var legend = $('.legend')[current_board];
+                    $('.current-legend').removeClass('current-legend');
+                    $(legend).addClass('current-legend');
+
+                    $.each(wid[current_board], function(index, item) {
+                        $(".aisle:eq(" + index + ")").data("callno", item);
+                    });
+                    $.each(wid_endcaps[current_board], function(index, item) {
+                        $(".endcap:eq(" + index + ")").data("sign", item);
+                    });
+                    
+                    if (current_board === 0) {
+                        $('.stairs-down').addClass('stairs-down-disabled').removeClass('stairs-down');
+                    } else {
+                        $('.stairs-down-disabled').addClass('stairs-down').removeClass('stairs-down-disabled');
+                    }
+                    
+                    if (current_board === 3) {
+                        $('.stairs-up').addClass('stairs-up-disabled').removeClass('stairs-up');
+                    } else {
+                        $('.stairs-up-disabled').addClass('stairs-up').removeClass('stairs-up-disabled');
+                    }
+                }
 
                 $.each(data, function(index, value) { 
                     var n = $('.' + index);
@@ -81,8 +104,8 @@ $(function() {
                 });
             });
             iosocket.on('ready', function(data) {
-                console.log('received ready emit');
-                console.log(data);
+                // The ready signal is when we have two players and all data loaded
+                // This is the equivalent of the waving of the checkered flag
                 var opponent_id = 'p1';
                 if (player_id === 'p1') {
                     opponent_id = 'p2';
@@ -130,61 +153,70 @@ $(function() {
 
             switch(e.keyCode) {
                 case 37: // left
-                next_tile = $(currently_selected).prev('.tile');
+                    next_tile = $(currently_selected).prev('.tile');
 
-                if (next_tile.length === 0) {
-                    next_tile = currently_selected;
-                }
+                    if (next_tile.length === 0) {
+                        next_tile = currently_selected;
+                    }
 
-                break;
+                    break;
                 case 38: // up
 
-                // What column are we in?
-                var currently_selected_index = $(currently_selected).index();
+                    // What column are we in?
+                    var currently_selected_index = $(currently_selected).index();
 
-                // What row we're in?
-                var current_row = $(currently_selected).parent();
+                    // What row we're in?
+                    var current_row = $(currently_selected).parent();
 
-                var prev_row = $(current_row).prev('.tile-row');
+                    var prev_row = $(current_row).prev('.tile-row');
 
-                if (prev_row.length === 0) {
-                    prev_row = current_row;
-                }
+                    if (prev_row.length === 0) {
+                        prev_row = current_row;
+                    }
 
-                next_tile = $(prev_row).children()[currently_selected_index];
+                    next_tile = $(prev_row).children()[currently_selected_index];
 
-                break;
+                    break;
                 case 39: // right
-                var next_tile = $(currently_selected).next('.tile');
-                if (next_tile.length === 0) {
-                    next_tile = currently_selected;
-                }
+                    var next_tile = $(currently_selected).next('.tile');
+                    if (next_tile.length === 0) {
+                        next_tile = currently_selected;
+                    }
 
-                break;
+                    break;
                 case 40: // down
-                // What column are we in?
-                var currently_selected_index = $(currently_selected).index();
+                    // What column are we in?
+                    var currently_selected_index = $(currently_selected).index();
 
-                // Now get the row we're in
-                var current_row = $(currently_selected).parent();
+                    // Now get the row we're in
+                    var current_row = $(currently_selected).parent();
 
-                var next_row = $(current_row).next('.tile-row');
+                    var next_row = $(current_row).next('.tile-row');
 
-                if (next_row.length === 0) {
-                    next_row = current_row;
-                }
+                    if (next_row.length === 0) {
+                        next_row = current_row;
+                    }
 
-                next_tile = $(next_row).children()[currently_selected_index];
+                    next_tile = $(next_row).children()[currently_selected_index];
 
-                break;
+                    break;
+            }
+
+            var next_board = current_board;
+            if ($(next_tile).hasClass('stairs-up') && current_board !== 3) {
+                next_board = current_board + 1;
+            }
+
+            if ($(next_tile).hasClass('stairs-down') && current_board !== 0) {
+                next_board = current_board - 1;
             }
 
             var i_pl = $(next_tile).parent().index();
             var j_pl = $(next_tile).index();
             var c_book = $('#progress').data('current-book');
 
-            // Now get the row we're in
-            var message = {p: player_id, r: room_id, b: '1', i: i_pl, j: j_pl, c: c_book};
+            // Our final, packaged message.
+            var message = {p: player_id, r: room_id, b: next_board, i: i_pl, j: j_pl, c: c_book};
 
             // Sometimes we don't actually move (when a user tries to walk into a wall)
             if(!$(next_tile).hasClass('blocked')){
