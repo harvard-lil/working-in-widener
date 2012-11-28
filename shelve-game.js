@@ -16,6 +16,8 @@ $(function() {
         $('#progress').data('current-book', current_book);
 
         // Socket.io stuff
+        // Comment this out if you're serving the socket.io client from node.js
+        var WEB_SOCKET_SWF_LOCATION = './WebSocketMain.swf';
         var iosocket = io.connect(config.node_host + ':' + config.node_port);
         iosocket.on('connect', function () {
 
