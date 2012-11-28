@@ -102,19 +102,6 @@ $(function() {
                         var callno = $(target_tile).data("callno");
                         $('#callno_sign, #endcap_sign').hide();
                         if(callno) {
-                            if(callno === current_callno) {
-                                current_book = current_book + 1;
-                                $('#progress').data('current-book', current_book);
-                                iosocket.emit('shelved', {p: player_id, c: current_book});
-                                if(current_book == cart_contents.length) {
-                                    iosocket.emit('completed', {p: player_id, r: room_id});
-                                }
-                                else {
-                                    $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
-                                    $('.current-target-callno').fadeOut().delay(500).html(cart_contents[current_book].call_num).fadeIn();
-                                    current_callno = cart_contents[current_book].call_num;
-                                }
-                            }
                             $('#callno_sign').show().text(callno);
                             $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
                         }
@@ -169,11 +156,44 @@ $(function() {
     $(document).keydown(function(e) {
 
         /** Get the current position */
-        if (ready && e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40)     {
+        if (ready && e.which === 32 || e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40)     {
             var currently_selected = $('.' + player_id);
-            var next_tile;
+            var next_tile = currently_selected;
+            var next_board = current_board;
 
             switch(e.keyCode) {
+                case 32: // space
+                
+                    var callno = $(currently_selected).data("callno");
+                    if(callno) {
+                        if(callno === current_callno) {
+                            current_book = current_book + 1;
+                            $('#progress').data('current-book', current_book);
+                            iosocket.emit('shelved', {p: player_id, c: current_book});
+                            if(current_book == cart_contents.length) {
+                                iosocket.emit('completed', {p: player_id, r: room_id});
+                            }
+                            else {
+                                $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
+                                $('.current-target-callno').fadeOut().delay(500).html(cart_contents[current_book].call_num).fadeIn();
+                                current_callno = cart_contents[current_book].call_num;
+                            }
+                        }
+//                        $('#callno_sign').show().text(callno);
+//                        $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                    }
+                
+                
+                
+                    if ($(currently_selected).hasClass('stairs-up') && current_board !== 3) {
+                        next_board = current_board + 1;
+                    }
+
+                    if ($(currently_selected).hasClass('stairs-down') && current_board !== 0) {
+                        next_board = current_board - 1;
+                    }
+
+                    break;
                 case 37: // left
                     next_tile = $(currently_selected).prev('.tile');
 
@@ -222,15 +242,6 @@ $(function() {
                     next_tile = $(next_row).children()[currently_selected_index];
 
                     break;
-            }
-
-            var next_board = current_board;
-            if ($(next_tile).hasClass('stairs-up') && current_board !== 3) {
-                next_board = current_board + 1;
-            }
-
-            if ($(next_tile).hasClass('stairs-down') && current_board !== 0) {
-                next_board = current_board - 1;
             }
 
             var i_pl = $(next_tile).parent().index();
