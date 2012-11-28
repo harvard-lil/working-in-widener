@@ -1,3 +1,7 @@
+body {
+  font-family: 'Strait', arial, serif;
+}
+
 .tile {
 	/*border: solid 1px;*/
 	float: left;
@@ -157,6 +161,7 @@
   float:left;
   margin-bottom:10px;
   margin-top:5px;
+  font-size:2em;
 }
 
 h1.legend-west {
@@ -169,7 +174,7 @@ h1.legend-east {
 }
 
 .legend p {
-  font-size:24px;
+  font-size:28px;
   float:left;
 }
 
