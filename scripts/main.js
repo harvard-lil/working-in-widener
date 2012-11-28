@@ -179,7 +179,7 @@ $(function() {
                             else {
                                 $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
                                 $('.current-target-callno').fadeOut().delay(500).html(cart_contents[current_book].call_num).fadeIn();
-                                $('.creator').fadeOut().delay(500).html(cart_contents[current_book].creator).fadeIn();
+                                $('.creator').fadeOut().delay(500).html('by ' + cart_contents[current_book].creator).fadeIn();
                                 current_callno = cart_contents[current_book].call_num;
                             }
                         }
