@@ -52,15 +52,15 @@ body {
 }
 
 .stairs {
-  /*background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/stairs.png") no-repeat #efefef;*/
+  /*background: url("../images/stairs.png") no-repeat #efefef;*/
 }
 
 .stairs-up {
-  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/stairs-up.png") no-repeat #efefef;
+  background: url("../images/stairs-up.png") no-repeat #efefef;
 }
 
 .stairs-down {
-  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/stairs-down.png") no-repeat #efefef;
+  background: url("../images/stairs-down.png") no-repeat #efefef;
 }
 
 
@@ -73,17 +73,17 @@ body {
 }
 
 .shelf {
-  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books.png") repeat-x #35235D;
+  background: url("../images/shelved-books.png") repeat-x #35235D;
   background-position: 0 1px;
 }
 
 .shelf-east {
-  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books-east.png") repeat-y #35235D;
+  background: url("../images/shelved-books-east.png") repeat-y #35235D;
   background-position: 1px 1px;
 }
 
 .shelf-west {
-  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/shelved-books-west.png") repeat-y #35235D;
+  background: url("../images/shelved-books-west.png") repeat-y #35235D;
   background-position: 5px 1px;
 }
 
@@ -155,12 +155,12 @@ body {
 }
 
 .p1.tile, .p2.tile {
-  background-image: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/book-cart-small.png");
+  background-image: url("../images/book-cart-small.png");
   background-repeat:no-repeat;
 }
 
 #progress, #opponent-progress {
-  background-image: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/book-cart-large.png");
+  background-image: url("../images/book-cart-large.png");
   background-repeat:no-repeat;
   display:block;
   height:100px;
@@ -175,7 +175,7 @@ body {
   position:relative;
   float:left;
   margin-right:25px;
-  background: url("http://hlsl7.law.harvard.edu/dev/annie/game/static/images/legend.png") no-repeat;
+  background: url("../images/legend.png") no-repeat;
   background-position: 1px 50px;
 }
 

@@ -5,7 +5,7 @@ var app = require('express')()
 , fs = require('fs');
 
 // Load our config
-var data = fs.readFileSync(__dirname + 'config.json'),
+var data = fs.readFileSync('config.json'),
     config;
 
 try {
@@ -99,8 +99,7 @@ var build_LibraryCloud_requests = function(room_id) {
         var call_num = wid[rand_index];
         
         var options = {
-          //host: 'librarycloud.harvard.edu',
-          host: 'hlsl8.law.harvard.edu',
+          host: config.lc_host,
           port: 80,
           path: '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1',
           method: 'GET'
