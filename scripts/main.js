@@ -2,7 +2,7 @@ $(function() {
     // Load our config
     var config;
 
-    $.getJSON("/config.json", function(json) {
+    $.getJSON("config.json", function(json) {
         config = json;
 
         // All of our call numbers and endcaps
@@ -16,6 +16,8 @@ $(function() {
         $('#progress').data('current-book', current_book);
 
         // Socket.io stuff
+        // Comment this out if you're serving the socket.io client from node.js
+        var WEB_SOCKET_SWF_LOCATION = 'WebSocketMain.swf';
         var iosocket = io.connect(config.node_host + ':' + config.node_port);
         iosocket.on('connect', function () {
 
@@ -27,6 +29,7 @@ $(function() {
                 cart_contents = data[player_id];
                 $('.title').html(cart_contents[current_book].title);
                 $('.current-target-callno').html(cart_contents[current_book].call_num);
+                $('.creator').html('by ' + cart_contents[current_book].creator);
                 current_callno = cart_contents[current_book].call_num;
             });
 
@@ -57,6 +60,25 @@ $(function() {
                         $('.stairs-down-disabled').addClass('stairs-down').removeClass('stairs-down-disabled');
                     }
                     
+                    if (current_board === 1) {
+                        $('.bridge').addClass('blocked');
+                        $('.north-bridge-wall').addClass('north-bridge-wall-disabled').removeClass('north-bridge-wall');
+                        $('.west-bridge-wall-disabled').addClass('west-bridge-wall').removeClass('west-bridge-wall-disabled');
+                        $('.south-bridge-wall').addClass('south-bridge-wall-disabled').removeClass('south-bridge-wall');
+                        $('.east-bridge-wall-disabled').addClass('east-bridge-wall').removeClass('east-bridge-wall-disabled');
+                        
+                        $('.tunnel').addClass('tunnel-disabled').removeClass('tunnel');
+                        
+                    } else {
+                        $('.bridge').removeClass('blocked');
+                        $('.north-bridge-wall-disabled').addClass('north-bridge-wall').removeClass('north-bridge-wall-disabled');
+                        $('.west-bridge-wall').addClass('west-bridge-wall-disabled').removeClass('west-bridge-wall');
+                        $('.south-bridge-wall-disabled').addClass('south-bridge-wall').removeClass('south-bridge-wall-disabled');
+                        $('.east-bridge-wall').addClass('east-bridge-wall-disabled').removeClass('east-bridge-wall');
+                        
+                        $('.tunnel-disabled').addClass('tunnel').removeClass('tunnel-disabled');
+                    }
+                    
                     if (current_board === 3) {
                         $('.stairs-up').addClass('stairs-up-disabled').removeClass('stairs-up');
                     } else {
@@ -65,33 +87,29 @@ $(function() {
                 }
 
                 $.each(data, function(index, value) { 
-                    var n = $('.' + index);
-                    $(n).removeClass(index);
-                    
+
                     var target_i = $('.tile-row')[value.i];
                     var target_tile = $(target_i).children()[value.j];
 
-                    $(target_tile).addClass(index);
-                    $(target_tile).css('background-position', '0px -' + 35 * value.c + 'px');
+                    // If our opponent is not on our board, don't draw them
+                    if (value.b === current_board ) {
+                        var n = $('.' + index);
+                        $(n).removeClass(index);
+                        $(n).css('background-position', '0px 0px');
+                    
+                        $(target_tile).addClass(index);
+                        $(target_tile).css('background-position', '0px -' + 35 * value.c + 'px');
 
+                    } else {
+                        $('.' + index).removeClass(index);
+                        //$(target_tile).css('background-position', '0px -' + 35 * value.c + 'px');
+                    }
+                    
                     if(index == player_id) {
                         var tile_position = $(target_tile).position();
                         var callno = $(target_tile).data("callno");
                         $('#callno_sign, #endcap_sign').hide();
                         if(callno) {
-                            if(callno === current_callno) {
-                                current_book = current_book + 1;
-                                $('#progress').data('current-book', current_book);
-                                iosocket.emit('shelved', {p: player_id, c: current_book});
-                                if(current_book == cart_contents.length) {
-                                    iosocket.emit('completed', {p: player_id, r: room_id});
-                                }
-                                else {
-                                    $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
-                                    $('.current-target-callno').fadeOut().delay(500).html(cart_contents[current_book].call_num).fadeIn();
-                                    current_callno = cart_contents[current_book].call_num;
-                                }
-                            }
                             $('#callno_sign').show().text(callno);
                             $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
                         }
@@ -111,8 +129,6 @@ $(function() {
                     opponent_id = 'p2';
                 } 
 
-                //$('#your_name').text(data[player_id].name +  ' ( ' + player_id + ' )').addClass(player_id + '-text');
-                //$('#opponent_name').text(data[opponent_id].name +  ' ( ' + opponent_id + ' )').addClass(opponent_id + '-text');
                 $('#your_name').text(data[player_id].name).addClass(player_id + '-text');
                 $('#opponent_name').text(data[opponent_id].name).addClass(opponent_id + '-text');
 
@@ -141,8 +157,7 @@ $(function() {
 
 
         iosocket.on('disconnect', function() {
-
-            console.log('disconnected');
+            //console.log('disconnected');
         });
     });
 
@@ -150,11 +165,45 @@ $(function() {
     $(document).keydown(function(e) {
 
         /** Get the current position */
-        if (ready && e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40)     {
+        if (ready && e.which === 32 || e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40)     {
             var currently_selected = $('.' + player_id);
-            var next_tile;
+            var next_tile = currently_selected;
+            var next_board = current_board;
 
             switch(e.keyCode) {
+                case 32: // space
+                
+                    var callno = $(currently_selected).data("callno");
+                    if(callno) {
+                        if(callno === current_callno) {
+                            current_book = current_book + 1;
+                            $('#progress').data('current-book', current_book);
+                            iosocket.emit('shelved', {p: player_id, c: current_book});
+                            if(current_book == cart_contents.length) {
+                                iosocket.emit('completed', {p: player_id, r: room_id});
+                            }
+                            else {
+                                $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
+                                $('.current-target-callno').fadeOut().delay(500).html(cart_contents[current_book].call_num).fadeIn();
+                                $('.creator').fadeOut().delay(500).html('by ' + cart_contents[current_book].creator).fadeIn();
+                                current_callno = cart_contents[current_book].call_num;
+                            }
+                        }
+//                        $('#callno_sign').show().text(callno);
+//                        $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                    }
+                
+                
+                
+                    if ($(currently_selected).hasClass('stairs-up') && current_board !== 3) {
+                        next_board = current_board + 1;
+                    }
+
+                    if ($(currently_selected).hasClass('stairs-down') && current_board !== 0) {
+                        next_board = current_board - 1;
+                    }
+
+                    break;
                 case 37: // left
                     next_tile = $(currently_selected).prev('.tile');
 
@@ -203,15 +252,6 @@ $(function() {
                     next_tile = $(next_row).children()[currently_selected_index];
 
                     break;
-            }
-
-            var next_board = current_board;
-            if ($(next_tile).hasClass('stairs-up') && current_board !== 3) {
-                next_board = current_board + 1;
-            }
-
-            if ($(next_tile).hasClass('stairs-down') && current_board !== 0) {
-                next_board = current_board - 1;
             }
 
             var i_pl = $(next_tile).parent().index();
