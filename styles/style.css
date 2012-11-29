@@ -259,7 +259,6 @@ p.legend-east {
 
 #main {
     width: 1150px;
-    height: 900px;
     margin:20px auto 0px;
     position:relative;
 }
@@ -288,6 +287,18 @@ h1 {
     font-size: 4.4em;
     line-height: 0;
     padding: 15px 0 30px 0;
+    text-align
+}
+
+.winner h1 {
+  text-align:center;
+  margin-top:75px;
+}
+
+.winner .status-update {
+  text-align:center;
+  margin-top:55px;
+  size:1.2em;
 }
 
 .left {
