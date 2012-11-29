@@ -74,17 +74,17 @@ body {
 }
 
 .shelf {
-  background: url("../images/shelved-books.png") repeat-x #35235D;
+  background: url("../images/shelved-books.png") repeat-x #CB2402;
   background-position: 0 1px;
 }
 
 .shelf-east {
-  background: url("../images/shelved-books-east.png") repeat-y #35235D;
+  background: url("../images/shelved-books-east.png") repeat-y #CB2402;
   background-position: 1px 1px;
 }
 
 .shelf-west {
-  background: url("../images/shelved-books-west.png") repeat-y #35235D;
+  background: url("../images/shelved-books-west.png") repeat-y #CB2402;
   background-position: 5px 1px;
 }
 
@@ -121,6 +121,12 @@ body {
 }
 
 .title {
+  width:265px;
+  height:35px;
+  overflow:hidden;
+}
+
+.creator {
   width:265px;
   height:35px;
   overflow:hidden;
@@ -254,11 +260,8 @@ p.legend-east {
 #main {
     width: 1150px;
     height: 900px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-left:-575px;
-    margin-top:-450px;
+    margin:20px auto 0px;
+    position:relative;
 }
 
 /* Hovering control box -- start*/
