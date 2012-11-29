@@ -224,6 +224,16 @@ p.legend-east {
     	opacity: 0.1;
 }
 
+#main {
+    width: 1150px;
+    height: 900px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left:-575px;
+    margin-top:-450px;
+}
+
 /* Hovering control box -- start*/
 
 #hover {
@@ -244,8 +254,8 @@ p.legend-east {
 }
 
 h1 {
-    color: #35235D;
-    font-size: 4.8em;
+    color: #DB2464;
+    font-size: 4.4em;
     line-height: 0;
     padding: 15px 0 30px 0;
 }
@@ -262,6 +272,7 @@ h1 {
 #hover h2{
     line-height: 0;
     font-size: 1.7em;
+    color:#4C49A2;
 }
 
 ul {
@@ -270,7 +281,7 @@ ul {
 
 ul li {
     padding: 4px;
-    font-size:1.1em;
+    font-size:1.0em;
 }
 
 ul li:first-child {
@@ -295,7 +306,7 @@ ul li:first-child {
 }
 
 .button {
-    background-color: #4C49A2;
+    background-color: #DB2464;
     display: inline-block;
     color: white !important;
     font-weight: bold;
@@ -303,10 +314,10 @@ ul li:first-child {
     text-decoration: none;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    -moz-box-shadow: 0 1px 3px #4C49A2;
-    -webkit-box-shadow: 0 1px 3px #4C49A2;
-    text-shadow: 0 -1px 1px #4C49A2;
-    border-bottom: 1px solid #4C49A2;
+    -moz-box-shadow: 0 1px 3px #444;
+    -webkit-box-shadow: 0 1px 3px #444;
+    text-shadow: 0 -1px 1px #444;
+    border-bottom: 1px solid #444;
     position: relative;
     cursor: pointer;
     overflow: visible;
