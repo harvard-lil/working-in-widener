@@ -111,8 +111,10 @@ $(function() {
                     opponent_id = 'p2';
                 } 
 
-                $('#your_name').text(data[player_id].name +  ' ( ' + player_id + ' )').addClass(player_id + '-text');
-                $('#opponent_name').text(data[opponent_id].name +  ' ( ' + opponent_id + ' )').addClass(opponent_id + '-text');
+                //$('#your_name').text(data[player_id].name +  ' ( ' + player_id + ' )').addClass(player_id + '-text');
+                //$('#opponent_name').text(data[opponent_id].name +  ' ( ' + opponent_id + ' )').addClass(opponent_id + '-text');
+                $('#your_name').text(data[player_id].name).addClass(player_id + '-text');
+                $('#opponent_name').text(data[opponent_id].name).addClass(opponent_id + '-text');
 
                 $('#progress').addClass(player_id + 'progress');
                 $('#opponent-progress').addClass(opponent_id + 'progress');
@@ -130,7 +132,8 @@ $(function() {
         iosocket.on('winner', function(data) {
             ready = false;
             iosocket.disconnect()
-            $('#start-status').html(data + ' WINS! <a href=".">Start a new game?</a>').addClass('status-update');
+            $('#hover').html('<h1>' + data + ' WINS!</h1>');
+            $('#hover').append('<div id="#start-status" class="status-update"><a href=".">Start a new game?</a></div>');
             $('#main').addClass('light');
             $('#hover').show();
             //$('#dashboard').text(data + ' WINS!').css('font-size', '108px');

@@ -9,6 +9,7 @@ body {
 	width: 35px;
 	height: 35px;
 	overflow:hidden;
+	background-color:#f1f1f9;
 }
 
 .west-wall {
@@ -29,6 +30,10 @@ body {
 
 .tunnel {
   width: 37px;
+}
+
+.blocked {
+  background-color: #fff;
 }
 
 .stairs {
@@ -84,12 +89,13 @@ body {
 }
 
 #dashboard {
-  padding:5px 45px 0 45px;
+  padding:5px 5px 0 25px;
   position: absolute;
-  top: 15px;
-  left:300px;
-  width:515px;
-  height:330px;
+  top: 5px;
+  left:325px;
+  width:425px;
+  height:348px;
+  background-color:#fff;
 }
 
 .current-target {
@@ -116,10 +122,16 @@ body {
 
 .p1-text {
     color: #CB2402;
+    height:21px;
+    width: 110px;
+    overflow:hidden;
 }
 
 .p2-text {
-    color: #4C49A2;
+  color: #4C49A2;
+  height:21px;
+  width: 110px;
+  overflow:hidden;
 }
 
 .p1, .p1progress {
