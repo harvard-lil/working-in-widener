@@ -1,12 +1,14 @@
 #Working in Widener
 
-Working in Widener is a two player game played in the web browser. You duel against a live person. The first one to shelve the assigned books wins. Maps are based on real library maps from Harvard's Widener Library.
+Working in Widener is a two player game. You duel, in your web browser, against a live person. The first one to shelve the assigned books wins. Maps are based on real library maps from Harvard's Widener Library.
 
 ## Installation
 
 ### Node.js
 
 Working in Widener uses [node.js](http://nodejs.org/). Be sure to install it.
+
+If you're on Ubuntu, [this might be helpful](http://apptob.org/)
 
 ### Installation with Apache and Node.js
 
