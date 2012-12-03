@@ -3,11 +3,21 @@ body {
   color: #35235D;
 }
 
+#main {
+    width: 1150px;
+    margin:20px auto 0px;
+    position:relative;
+}
+
+#container {
+  float:left;
+}
+
 .tile {
 	/*border: solid 1px;*/
 	float: left;
-	width: 35px;
-	height: 35px;
+	width: 30px;
+	height: 30px;
 	overflow:hidden;
 	background-color:#f1f1f9;
 }
@@ -29,7 +39,7 @@ body {
 }
 
 .tunnel {
-  width: 37px;
+  width: 32px;
 }
 
 .blocked {
@@ -108,28 +118,30 @@ body {
   padding:5px 5px 0 25px;
   position: absolute;
   top: 0px;
-  left:317px;
-  width:425px;
-  height:346px;
+  left:272px;
+  width:300px;
+  height:290px;
   background-color:#fff;
 }
 
 .current-target {
-  margin-left: 50px;
+  margin-left: 25px;
   margin-top:5px;
   float:left;
 }
 
 .title {
-  width:265px;
+  width:160px;
   height:35px;
   overflow:hidden;
 }
 
 .creator {
-  width:265px;
+  width:160px;
   height:35px;
   overflow:hidden;
+  margin-bottom:0px;
+  font-size: .9em;
 }
 
 .current-target-callno {
@@ -149,6 +161,8 @@ body {
     height:21px;
     width: 110px;
     overflow:hidden;
+  margin-top:0px;
+  margin-bottom:10px;
 }
 
 .p2-text {
@@ -156,6 +170,8 @@ body {
   height:21px;
   width: 110px;
   overflow:hidden;
+  margin-top:0px;
+  margin-bottom:10px;
 }
 
 .p1 {
@@ -188,6 +204,10 @@ body {
   overflow:hidden;
 }
 
+#opponent_name {
+  margin-top:25px;
+}
+
 .p1progress {
   background-image: url("../images/book-cart-large-p1.png");
 }
@@ -196,55 +216,81 @@ body {
   background-image: url("../images/book-cart-large-p2.png");
 }
 
+#legend-container {
+  float:left;
+  width:30px;
+  margin-left:-15px;
+}
+
 .legend {
   padding:3px;
-  height:200px;
-  width:245px;
+  width:165px;
   position:relative;
   float:left;
   margin-right:25px;
   background: url("../images/legend.png") no-repeat;
-  background-position: 1px 50px;
+  background-position: 1px 30px;
+  height:132px;
+  margin-top:-3px;
+  margin-bottom:2px;
 }
 
 .legend.current-legend {
   border:3px solid #B8DC3C;
+  background-position:5px 35px;
+  margin-left: -6px;
 }
 
 .legend-no-tunnel {
   background: url("../images/legend-no-tunnel.png") no-repeat;
-  background-position: 1px 50px;
+  background-position: 1px 35px;
 }
 
 .legend h1 {
   float:left;
-  margin-bottom:10px;
-  margin-top:5px;
-  font-size:2em;
+  margin-bottom:0px;
+  margin-top:0px;
+  font-size:1.2em;
+  padding:15px 0 25px 0;
 }
 
-h1.legend-west {
+.legend h2 {
+  float:left;
+  font-size
+}
+
+h2.legend-west {
   margin-left:10px;
   margin-right:85px;
 }
 
-h1.legend-east {
+h2.legend-east {
   margin-left:25px;
 }
 
 .legend p {
-  font-size:28px;
-  float:left;
+  font-size:1.3em;
 }
 
 p.legend-west {
-  margin-left:15px;
-  margin-top:10px;
+  margin-left:5px;
+  margin-top:0px;
+  float:left;
+  clear:left;
 }
 
 p.legend-east {
-  margin-left:145px;
-  margin-top:10px;
+  margin-right:20px;
+  margin-top:0px;
+  float:right;
+}
+
+.legend.current-legend p.legend-west {
+  margin-left:8px;
+}
+
+.legend.current-legend p.legend-east {
+  margin-right:14px;
 }
 
 #wrapper {
@@ -255,12 +301,6 @@ p.legend-east {
     	zoom: 1;
     	filter: alpha(opacity=10);
     	opacity: 0.1;
-}
-
-#main {
-    width: 1150px;
-    margin:20px auto 0px;
-    position:relative;
 }
 
 /* Hovering control box -- start*/

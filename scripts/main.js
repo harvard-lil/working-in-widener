@@ -43,7 +43,7 @@ $(function() {
                 if (data[player_id].b !== current_board) {
                     current_board = data[player_id].b;
                 
-                    var legend = $('.legend')[current_board];
+                    var legend = $('.legend')[3 - current_board];
                     $('.current-legend').removeClass('current-legend');
                     $(legend).addClass('current-legend');
 
@@ -99,7 +99,7 @@ $(function() {
                         $('.stairs').css('background-position', '0px 0px');
                     
                         $(target_tile).addClass(index);
-                        $(target_tile).css('background-position', '0px -' + 35 * value.c + 'px');
+                        $(target_tile).css('background-position', '0px -' + 30 * value.c + 'px');
 
                     } else {
                         $('.' + index).removeClass(index);
@@ -112,12 +112,12 @@ $(function() {
                         $('#callno_sign, #endcap_sign').hide();
                         if(callno) {
                             $('#callno_sign').show().text(callno);
-                            $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                            $('#callno_sign').css("top", tile_position.top + 30).css("left", tile_position.left - 7);
                         }
                         var sign = $(target_tile).data("sign");
                         if(sign) { 
                             $('#endcap_sign').show().text(sign);
-                            $('#endcap_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                            $('#endcap_sign').css("top", tile_position.top + 30).css("left", tile_position.left - 7);
                         }
                     }
                 });
