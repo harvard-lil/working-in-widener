@@ -6,14 +6,14 @@ var app = require('express')()
 
 // Load our config
 var data = fs.readFileSync('config.json'),
-    config;
+config;
 
 try {
-  config = JSON.parse(data);
+    config = JSON.parse(data);
 }
 catch (err) {
-  console.log('There has been an error parsing the JSON config.')
-  console.log(err);
+    console.log('There has been an error parsing the JSON config.')
+    console.log(err);
 }
 
 // Start node
@@ -23,20 +23,20 @@ server.listen(config.node_port);
 // Commented out because we're serving this from Apache. Uncomment to serve
 // everything from node
 /*app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/static/index.html');
+res.sendfile(__dirname + '/static/index.html');
 });
 app.get('/style.css', function (req, res) {
-    res.sendfile(__dirname + '/static/style.css');
+res.sendfile(__dirname + '/static/style.css');
 });
 app.get('/shelve-game.js', function (req, res) {
-    res.sendfile(__dirname + '/static/shelve-game.js');
+res.sendfile(__dirname + '/static/shelve-game.js');
 });
 app.get('/config.json', function (req, res) {
-    res.sendfile(__dirname + '/static/config.json');
+res.sendfile(__dirname + '/static/config.json');
 });
 
 app.get('/widener-8-bit.png', function (req, res) {
-    res.sendfile(__dirname + '/static/images/widener-8-bit.png');
+res.sendfile(__dirname + '/static/images/widener-8-bit.png');
 });*/
 
 // Call numbers used when assigning players their to_shelve list
@@ -46,18 +46,6 @@ var wid = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q209", "Q223", "Q224", 
 var rooms = [];
 
 // Our rooms get filled with objects. Something like:
-
-// was:
-//{
-//  start_time: num seconds since epoch,
-//  players: [
-//    {p1: { position: {b: 2, i: 0, j: 0}, name: "", to_shelve: []}},
-//    {p2: { position: {b: 2, i: 0, j: 1}, name: "", to_shelve: []}},
-//  ]
-//}
-
-
-// now:
 //{
 //  start_time: num seconds since epoch,
 //  players: {
@@ -65,6 +53,10 @@ var rooms = [];
 //    p2: { position: {b: 2, i: 0, j: 1}, name: "", to_shelve: []},
 //  }
 //}
+//
+// For efficiency, we package things a bit when we send to client. They
+// look for something like this:
+// {player_postions: {p1: {b: 2, i: 0, j: 0}, p2: {}}, to_shelve: {p1: [], p2: []}, player_info:{p1: {name: ""}, p2: {name: ""}}};
 
 // We check this to see if there is an open room for a new user
 var open_room_id = false;
@@ -79,277 +71,241 @@ var num_items_to_shelve = 2;
 // Shuffle our lists
 // Thanks to Jonas Raoni Soares Silva, http://jsfromhell.com/array/shuffle [v1.0]
 shuffle = function(o){ //v1.0
-    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-    return o;
+for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+return o;
 };
 /////////// Helpers ///////////
 
 var add_user = function(socket, solo) {
-	// A new user wants to play. If they want to play a solo game,
-	// create a room, add it to the global rooms, and send them on their way.
-	//
-	// If a user wants to play with another person, find an open room (a room
-	// with one player wiatingfor them.) if no open room, create one and they'll
-	// wait for a partner
-	//
-	// return the user's room_id 
+// A new user wants to play. If they want to play a solo game,
+// create a room, add it to the global rooms, and send them on their way.
+//
+// If a user wants to play with another person, find an open room (a room
+// with one player wiatingfor them.) if no open room, create one and they'll
+// wait for a partner
+//
+// return the user's room_id 
 
-	// If user wants to play a solo game
-	if (solo === true) {
-		var solo_room_id = Math.floor(Math.random()*89999+10000);
-		var now = new Date().getTime();
-		rooms[solo_room_id] = {start_time: now, players: {}};
-		rooms[solo_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: "", to_shelve: []};
-	
-		socket.join(solo_room_id);
-	    socket.emit('player_assignment', 'p1');
-	
-		return solo_room_id;
-	 }
-	
-	
-	// If a user wants to play with another person, deal with a two player room
-	var users_room_id;
-	
-	// Add a second player to a room
-	if (open_room_id !== false) {
-		users_room_id = open_room_id;
-		rooms[users_room_id].players.p2 = { position: {b: 2, i: 0, j: 1}, name: "", to_shelve: []};
-		
-		socket.join(users_room_id);
-	    socket.emit('player_assignment', 'p2');
-		
-		open_room_id = false;
-	} else { // create a new room id and set it up. Add the user. They'll wait for an opponent.
-		open_room_id = Math.floor(Math.random()*89999+10000);
-		var now = new Date().getTime();
-		rooms[open_room_id] = {start_time: now, players: {}};
-		rooms[open_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: "", to_shelve: []};
-		
-		socket.join(users_room_id);
-	    socket.emit('player_assignment', 'p1');
-		
-		users_room_id = open_room_id;
-	}
-	
-	socket.emit('room_assignment', users_room_id);
-			
-	return users_room_id;
+// If user wants to play a solo game
+if (solo === true) {
+    var solo_room_id = Math.floor(Math.random()*89999+10000);
+    var now = new Date().getTime();
+    rooms[solo_room_id] = {start_time: now, players: {}};
+    rooms[solo_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: "", to_shelve: []};
+
+    socket.join(solo_room_id);
+    socket.emit('player_assignment', 'p1');
+
+    return solo_room_id;
+}
+
+
+// If a user wants to play with another person, deal with a two player room
+var users_room_id;
+
+// Add a second player to a room
+if (open_room_id !== false) {
+    users_room_id = open_room_id;
+    rooms[users_room_id].players.p2 = { position: {b: 2, i: 0, j: 1}, name: "", to_shelve: []};
+
+    socket.join(users_room_id);
+    socket.emit('player_assignment', 'p2');
+
+    open_room_id = false;
+    } else { // create a new room id and set it up. Add the user. They'll wait for an opponent.
+    open_room_id = Math.floor(Math.random()*89999+10000);
+    var now = new Date().getTime();
+    rooms[open_room_id] = {start_time: now, players: {}};
+    rooms[open_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: "", to_shelve: []};
+
+    users_room_id = open_room_id;
+
+    socket.join(users_room_id);
+    socket.emit('player_assignment', 'p1');
+}
+
+// TODO: combine this with player assignment
+socket.emit('room_assignment', users_room_id);
+
+return users_room_id;
 };
 
 var add_LibraryCloud_doc = function(lc_response, room_id) {
-	// We get a document from LibrrayCloud. Add it to the room data structure.
-	var to_shelve_formatted = JSON.parse(lc_response);
+// We get a document from LibrrayCloud. Add it to the room data structure.
+var to_shelve_formatted = JSON.parse(lc_response);
 
-      var creator = '(No Creator)';
-      
-      if (to_shelve_formatted.docs[0].creator[0]) {
-          creator = to_shelve_formatted.docs[0].creator[0];
-      }
+var creator = '(No Creator)';
 
+if (to_shelve_formatted.docs[0].creator[0]) {
+    creator = to_shelve_formatted.docs[0].creator[0];
+}
 
-
-
-	  // This thing is ugly. We're looping through the players in the room and adding the LibraryCloud doc to heir to_shelve list
-		Object.keys(rooms[room_id].players).forEach(function(key) {
-		  rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
-		});
-
-//      rooms[room_id].to_shelve.p1.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
- //     rooms[room_id].to_shelve.p2.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
-
-	  // We want num_items_to_shelve items. This is the number of things we're going
-	  // to ask our players to shelve. Once we have all the requests from LibraryCloud,
-	  // send to our clients. This is the "everything's ready, play" signal
-      if (num_items_to_shelve === rooms[room_id].players.p1.to_shelve.length) {
-
-
-		//{
-		//  start_time: num seconds since epoch,
-		//  players: {
-		//    p1: { position: {b: 2, i: 0, j: 0}, name: "", to_shelve: []},
-		//    p2: { position: {b: 2, i: 0, j: 1}, name: "", to_shelve: []},
-		//  }
-		//}
-
-
-		  // This thing is ugly. If we have all of our items to shelve, loop through each player in the room and shuffle them
-		
-		Object.keys(rooms[room_id].players).forEach(function(key) {
-			
-			var shuffled_items = shuffle(rooms[room_id].players[key].to_shelve);
-			  rooms[room_id].players[key].to_shelve = shuffled_items;
-			
-		  rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
-		});
-		
-
-
-
-
-//          var p1_shuffled_list = shuffle(rooms[room_id].to_shelve.p1);
-//          rooms[room_id].to_shelve.p1 = p1_shuffled_list;
-//          var p2_shuffled_list = shuffle(rooms[room_id].to_shelve.p2);
-//          rooms[room_id].to_shelve.p2 = p2_shuffled_list;
-
-          io.sockets.in(room_id).emit('shelve_list', rooms[room_id].to_shelve);
-      }	
-	
+// This thing is ugly. We're looping through the players in the room and adding the LibraryCloud doc to heir to_shelve list
+Object.keys(rooms[room_id].players).forEach(function(key) {
+    rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
+});
 };
 
-var build_LibraryCloud_requests = function(room_id) {
-	// Select a call number from our list of call numbers and fetch one
-	// result from LibraryCloud based on that call number
-    
-    for (var i = 0; i < num_items_to_shelve; i ++) {
-        
-        var rand_index = Math.floor(Math.random() * (279 - 0 + 1)) + 0;
+var build_LibraryCloud_requests = function(finalize_room) {
+// Select a call number from our list of call numbers and fetch one
+// result from LibraryCloud based on that call number
 
-        var call_num = wid[rand_index];
-        
-        var options = {
-          host: config.lc_host,
-          port: 80,
-          path: '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1',
-          method: 'GET'
-        };
-    
-        //console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1');
-    
-        // make the request, and then end it, to close the connection
-		// once we have the request pass it off to our packaging function
-		var req = http.request(options, function(res) {
-			var call_num_searched = call_num;
-			// Receive a response from LibraryCloud, pull out the title and call number
-			// and add it to our list. Do this num_items_to_shelve times.
+room_id = arguments[1];
 
-		    var to_shelve_raw = "";
+for (var i = 0; i < num_items_to_shelve; i ++) {
 
-		  // Keep tacking chunks on as we receive them.
-		  res.on('data', function(chunk) {
-		    to_shelve_raw += chunk;
-		  });
+    var rand_index = Math.floor(Math.random() * (279 - 0 + 1)) + 0;
 
-		  // Finished receiving chunks? If so, package.
-		  res.on('end', function() {
-		      add_LibraryCloud_doc(to_shelve_raw, room_id);
-		  });
-			
-			
-			});
-		
-		req.end();
-    }
+    var call_num = wid[rand_index];
+
+    var options = {
+        host: config.lc_host,
+        port: 80,
+        path: '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1',
+        method: 'GET'
+    };
+
+    //console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1');
+
+    // make the request, and then end it, to close the connection
+    var req = http.request(options, function(res) {
+        // Receive a response from LibraryCloud, pull out the title and call number
+        // and add it to our list. Do this num_items_to_shelve times.
+
+        var to_shelve_raw = "";
+
+        // Keep tacking chunks on as we receive them.
+        res.on('data', function(chunk) {
+            to_shelve_raw += chunk;
+        });
+
+        // Finished receiving chunks? If so, package and pass off to our callback, finalize_room
+        res.on('end', function() {
+            var to_shelve_formatted = JSON.parse(to_shelve_raw);
+
+            var creator = '(No Creator)';
+
+            if (to_shelve_formatted.docs[0].creator[0]) {
+                creator = to_shelve_formatted.docs[0].creator[0];
+            }
+
+            // This thing is ugly. We're looping through the players in the room and adding the LibraryCloud doc to heir to_shelve list
+            Object.keys(rooms[room_id].players).forEach(function(key) {
+                rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
+            });
+
+
+            finalize_room(room_id);		
+        });
+
+
+    });
+
+    req.end();
+}
+
 };
 
+var finalize_room = function(room_id) {
+// Our rooms get filled with objects. Something like:
+
+
+if (num_items_to_shelve === rooms[room_id].players.p1.to_shelve.length) {
+
+    // This thing is ugly. If we have all of our items to shelve, loop through each player in the room and shuffle them
+
+    Object.keys(rooms[room_id].players).forEach(function(key) {
+
+        var shuffled_items = shuffle(rooms[room_id].players[key].to_shelve);
+        rooms[room_id].players[key].to_shelve = shuffled_items;
+    });
+
+    var player_positions = {};
+
+    Object.keys(rooms[room_id].players).forEach(function(key) {
+
+        player_positions[key] = rooms[room_id].players[key].position;
+
+
+    });
+    io.sockets.in(room_id).emit('board_update', player_positions);
+
+    // player_info:{p1: {name: ""}, p2: {name: ""}
+    var player_info = {};
+    var to_shelve = {}
+
+    Object.keys(rooms[room_id].players).forEach(function(key) {
+        player_info[key] = {name: rooms[room_id].players[key].name};
+        to_shelve[key] = rooms[room_id].players[key].to_shelve;
+    });		
+
+
+
+    io.sockets.in(room_id).emit('shelve_list', to_shelve);
+
+    //build_LibraryCloud_requests(open_room_id);
+    io.sockets.in(room_id).emit('ready', player_info);
+
+
+}
+}
 
 io.on('connection', function(socket){
-    
-	// Add a user to a room
-	var room_id = add_user(socket, false);
-	
-	build_LibraryCloud_requests(open_room_id);
-	// If we added a user we should get a room number. Now get the to_shelve data.
-	//if (open_room_id === false) {
-	//	build_LibraryCloud_requests(room_id);
-	//}
-    
-    socket.on('move', function (data) {
-	
-		rooms[data.r].players[data.p].position = {b: data.b, i: data.i, j: data.j, c: data.c};
-		
-        // Send to the sender and then to everyone else in the room.
-		// You've got to serve the servants.
-		
-		// Clients used to receive a data structure that looked like this:
-		// {player_postions: {p1: {b: 2, i: 0, j: 0}, p2: {}}, to_shelve: {p1: [], p2: []}, player_info:{p1: {name: ""}, p2: {name: ""}}};
-		
-		// We do some repackaing here to support old code in the client:
-		var player_positions = {};
-		
-		Object.keys(rooms[room_id].players).forEach(function(key) {
-			
-			player_positions[key] = rooms[room_id].players[key].position;
-			
 
-		});
-	    
-		
-        io.sockets.in(data.r).emit('board_update', player_positions);
+// Add a user to a room
+var room_id = add_user(socket, false);
+
+
+socket.on('move', function (data) {
+
+    rooms[data.r].players[data.p].position = {b: data.b, i: data.i, j: data.j, c: data.c};
+
+
+    // We do some repackaing here to support old code in the client:
+    var player_positions = {};
+
+    Object.keys(rooms[room_id].players).forEach(function(key) {
+
+        player_positions[key] = rooms[room_id].players[key].position;
+
+
     });
 
-    socket.on('name-update', function (data) {
-	
-		// Our rooms get filled with objects. Something like:
-		//{
-		//  start_time: num seconds since epoch,
-		//  players: [
-		//    {p1: { position: {b: 2, i: 0, j: 0}, name: "", to_shelve: []}},
-		//    {p2: { position: {b: 2, i: 0, j: 1}, name: "", to_shelve: []}},
-		//  ]
-		//}
-	
-	console.log(data);
-	console.log(rooms[data.r].players);
-	
-	
-		rooms[data.r].players[data.p].name = data.name;
-	
- 		//rooms[data.r].player_info[data.p].name = data.name;
- 		
- 		if(open_room_id ===  false) {
-	console.log('open_room_id is false');
-			var player_positions = {};
 
-			Object.keys(rooms[room_id].players).forEach(function(key) {
+    io.sockets.in(data.r).emit('board_update', player_positions);
+});
 
-				player_positions[key] = rooms[room_id].players[key].position;
+socket.on('start-game-request', function (data) {
 
+    rooms[data.r].players[data.p].name = data.name;
 
-			});
- 		    io.sockets.in(room_id).emit('board_update', player_positions);
+    // if solo room or if room has two people:
 
-			// player_info:{p1: {name: ""}, p2: {name: ""}
-			var player_info = {};
-			var to_shelve = {}
-			
-				Object.keys(rooms[room_id].players).forEach(function(key) {
-					player_info[key] = {name: rooms[room_id].players[key].name};
-					to_shelve[key] = rooms[room_id].players[key].to_shelve;
-				});		
-		    
-			console.log('sending ready signal with the player_info:');
-			console.log(player_info);
-			console.log('and the shelve_list:');
-			console.log(to_shelve);
-			
-			//client is expecting:
-			// {player_postions: {p1: {b: 2, i: 0, j: 0}, p2: {}}, to_shelve: {p1: [], p2: []}, player_info:{p1: {name: ""}, p2: {name: ""}}};
-			
-//			          io.sockets.in(room_id).emit('shelve_list', to_shelve);
- 		    io.sockets.in(room_id).emit('ready', player_info);
-	    }
-    });
-    
-    socket.on('shelved', function (data) {
-        io.sockets.in(data.r).emit('progress_update', data);
-    });
-    
-    socket.on('completed', function (data) {
-          var opponent_id = 'p1';
-          if (data.p === 'p1') {
-              opponent_id = 'p2';
-          }
-          
-          // Thanks to http://stackoverflow.com/a/13219636
-          //var ds = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-          //var log_message = ds + ' ' + rooms[data.r].player_info[data.p].name + ' beat ' + rooms[data.r].player_info[opponent_id].name;
+    if (data.solo === true || Object.keys(rooms[data.r].players).length === 2){
+        build_LibraryCloud_requests(finalize_room, room_id);
+    }
 
-          //fs.open("matches.log", 'a', 0666, function(err, fd){
-          //    fs.write(fd, log_message, null, undefined, function (err, written) {
-          //    });
-          //});
+});
 
-          io.sockets.in(data.r).emit('winner', rooms[data.r].players[data.p].name);
-    });
-})
+socket.on('shelved', function (data) {
+    io.sockets.in(data.r).emit('progress_update', data);
+});
+
+socket.on('completed', function (data) {
+    var opponent_id = 'p1';
+    if (data.p === 'p1') {
+        opponent_id = 'p2';
+    }
+
+    // Thanks to http://stackoverflow.com/a/13219636
+    //var ds = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    //var log_message = ds + ' ' + rooms[data.r].player_info[data.p].name + ' beat ' + rooms[data.r].player_info[opponent_id].name;
+
+    //fs.open("matches.log", 'a', 0666, function(err, fd){
+        //    fs.write(fd, log_message, null, undefined, function (err, written) {
+            //    });
+            //});
+
+            io.sockets.in(data.r).emit('winner', rooms[data.r].players[data.p].name);
+        });
+    })

@@ -20,14 +20,11 @@ $(function() {
         var WEB_SOCKET_SWF_LOCATION = 'WebSocketMain.swf';
         var iosocket = io.connect(config.node_host + ':' + config.node_port);
         iosocket.on('connect', function () {
-
             iosocket.on('player_assignment', function(data) {
                 player_id = data;
             });
 
             iosocket.on('shelve_list', function(data) {
-	console.log('shelve_list is:');
-	console.log(data);
                 cart_contents = data[player_id];
                 $('.title').html(cart_contents[current_book].title);
                 $('.current-target-callno').html(cart_contents[current_book].call_num);
@@ -40,7 +37,6 @@ $(function() {
             });
 
             iosocket.on('board_update', function(data) {
-                console.log(data);
                 // If we changed boards, redraw all the data elements
                 if (data[player_id].b !== current_board) {
                     current_board = data[player_id].b;
@@ -125,7 +121,6 @@ $(function() {
                 });
             });
             iosocket.on('ready', function(data) {
-	console.log('received ready signal');
                 // The ready signal is when we have two players and all data loaded
                 // This is the equivalent of the waving of the checkered flag
                 var opponent_id = 'p1';
@@ -275,8 +270,8 @@ $(function() {
     // On load, we display a hover panel. Get user's name and ask them to hit play.
     $('#name-form').submit(function() {
         if ($('#player-handle').val() !== "") {
-            var message = {p: player_id, r: room_id, name: $('#player-handle').val()};
-            iosocket.emit('name-update', message);
+            var message = {p: player_id, r: room_id, name: $('#player-handle').val(), solo: false};
+            iosocket.emit('start-game-request', message);
             $('#start-status').text('Waiting for your challenger.').addClass('status-update');
             $('#name-form').hide();
         } else{
