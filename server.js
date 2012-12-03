@@ -61,7 +61,7 @@ var rooms = [];
 // We check this to see if there is an open room for a new user
 var open_room_id = false;
 
-var num_items_to_shelve = 5;
+var num_items_to_shelve = 2;
 
 // Socket.io business
 //io.set('loglevel',10) // set log level to get all debug messages
@@ -77,57 +77,57 @@ return o;
 /////////// Helpers ///////////
 
 var add_user = function(socket, solo) {
-// A new user wants to play. If they want to play a solo game,
-// create a room, add it to the global rooms, and send them on their way.
-//
-// If a user wants to play with another person, find an open room (a room
-// with one player wiatingfor them.) if no open room, create one and they'll
-// wait for a partner
-//
-// return the user's room_id 
+    // A new user wants to play. If they want to play a solo game,
+    // create a room, add it to the global rooms, and send them on their way.
+    //
+    // If a user wants to play with another person, find an open room (a room
+    // with one player wiatingfor them.) if no open room, create one and they'll
+    // wait for a partner
+    //
+    // return the user's room_id 
 
-// If user wants to play a solo game
-if (solo === true) {
-    var solo_room_id = Math.floor(Math.random()*89999+10000);
-    var now = new Date().getTime();
-    rooms[solo_room_id] = {start_time: now, players: {}};
-    rooms[solo_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: "", to_shelve: []};
+    // If user wants to play a solo game
+    if (solo === true) {
+        var solo_room_id = Math.floor(Math.random()*89999+10000);
+        var now = new Date().getTime();
+        rooms[solo_room_id] = {start_time: now, players: {}};
+        rooms[solo_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: '', to_shelve: []};
 
-    socket.join(solo_room_id);
-    socket.emit('player_assignment', 'p1');
+        socket.join(solo_room_id);
+        socket.emit('player_assignment', 'p1');
 
-    return solo_room_id;
-}
+        return solo_room_id;
+    }
 
 
-// If a user wants to play with another person, deal with a two player room
-var users_room_id;
+    // If a user wants to play with another person, deal with a two player room
+    var users_room_id;
 
-// Add a second player to a room
-if (open_room_id !== false) {
-    users_room_id = open_room_id;
-    rooms[users_room_id].players.p2 = { position: {b: 2, i: 0, j: 1}, name: "", to_shelve: []};
+    // Add a second player to a room
+    if (open_room_id !== false) {
+        users_room_id = open_room_id;
+        rooms[users_room_id].players.p2 = { position: {b: 2, i: 0, j: 1}, name: '', to_shelve: []};
 
-    socket.join(users_room_id);
-    socket.emit('player_assignment', 'p2');
+        socket.join(users_room_id);
+        socket.emit('player_assignment', 'p2');
 
-    open_room_id = false;
-    } else { // create a new room id and set it up. Add the user. They'll wait for an opponent.
-    open_room_id = Math.floor(Math.random()*89999+10000);
-    var now = new Date().getTime();
-    rooms[open_room_id] = {start_time: now, players: {}};
-    rooms[open_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: "", to_shelve: []};
+        open_room_id = false;
+        } else { // create a new room id and set it up. Add the user. They'll wait for an opponent.
+        open_room_id = Math.floor(Math.random()*89999+10000);
+        var now = new Date().getTime();
+        rooms[open_room_id] = {start_time: now, players: {}};
+        rooms[open_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: '', to_shelve: []};
 
-    users_room_id = open_room_id;
+        users_room_id = open_room_id;
 
-    socket.join(users_room_id);
-    socket.emit('player_assignment', 'p1');
-}
+        socket.join(users_room_id);
+        socket.emit('player_assignment', 'p1');
+    }
 
-// TODO: combine this with player assignment
-socket.emit('room_assignment', users_room_id);
+    // TODO: combine this with player assignment
+    socket.emit('room_assignment', users_room_id);
 
-return users_room_id;
+    return users_room_id;
 };
 
 var add_LibraryCloud_doc = function(lc_response, room_id) {
@@ -207,85 +207,69 @@ for (var i = 0; i < num_items_to_shelve; i ++) {
 };
 
 var finalize_room = function(room_id) {
-// Our rooms get filled with objects. Something like:
+    // Our rooms get filled with objects. Something like:
 
+    if (num_items_to_shelve === rooms[room_id].players.p1.to_shelve.length) {
 
-if (num_items_to_shelve === rooms[room_id].players.p1.to_shelve.length) {
+        // This thing is ugly. If we have all of our items to shelve, loop through each player in the room and shuffle them
+        Object.keys(rooms[room_id].players).forEach(function(key) {
+            var shuffled_items = shuffle(rooms[room_id].players[key].to_shelve);
+            rooms[room_id].players[key].to_shelve = shuffled_items;
+        });
 
-    // This thing is ugly. If we have all of our items to shelve, loop through each player in the room and shuffle them
+        var player_positions = {};
 
-    Object.keys(rooms[room_id].players).forEach(function(key) {
+        Object.keys(rooms[room_id].players).forEach(function(key) {
+            player_positions[key] = rooms[room_id].players[key].position;
+        });
+        io.sockets.in(room_id).emit('board_update', player_positions);
 
-        var shuffled_items = shuffle(rooms[room_id].players[key].to_shelve);
-        rooms[room_id].players[key].to_shelve = shuffled_items;
-    });
+        // player_info:{p1: {name: ""}, p2: {name: ""}
+        var player_info = {};
+        var to_shelve = {}
 
-    var player_positions = {};
+        Object.keys(rooms[room_id].players).forEach(function(key) {
+            player_info[key] = {name: rooms[room_id].players[key].name};
+            to_shelve[key] = rooms[room_id].players[key].to_shelve;
+        });
 
-    Object.keys(rooms[room_id].players).forEach(function(key) {
+        io.sockets.in(room_id).emit('shelve_list', to_shelve);
 
-        player_positions[key] = rooms[room_id].players[key].position;
-
-
-    });
-    io.sockets.in(room_id).emit('board_update', player_positions);
-
-    // player_info:{p1: {name: ""}, p2: {name: ""}
-    var player_info = {};
-    var to_shelve = {}
-
-    Object.keys(rooms[room_id].players).forEach(function(key) {
-        player_info[key] = {name: rooms[room_id].players[key].name};
-        to_shelve[key] = rooms[room_id].players[key].to_shelve;
-    });		
-
-
-
-    io.sockets.in(room_id).emit('shelve_list', to_shelve);
-
-    //build_LibraryCloud_requests(open_room_id);
-    io.sockets.in(room_id).emit('ready', player_info);
-
-
-}
+        //build_LibraryCloud_requests(open_room_id);
+        io.sockets.in(room_id).emit('ready', player_info);
+    }
 }
 
 io.on('connection', function(socket){
 
-// Add a user to a room
-var room_id = add_user(socket, false);
+    // Add a user to a room
+    var room_id = add_user(socket, false);
 
 
-socket.on('move', function (data) {
+    socket.on('move', function (data) {
 
-    rooms[data.r].players[data.p].position = {b: data.b, i: data.i, j: data.j, c: data.c};
+        rooms[data.r].players[data.p].position = {b: data.b, i: data.i, j: data.j, c: data.c};
 
+        // We do some repackaing here to support old code in the client:
+        var player_positions = {};
 
-    // We do some repackaing here to support old code in the client:
-    var player_positions = {};
+        Object.keys(rooms[room_id].players).forEach(function(key) {
+            player_positions[key] = rooms[room_id].players[key].position;
+        });
 
-    Object.keys(rooms[room_id].players).forEach(function(key) {
-
-        player_positions[key] = rooms[room_id].players[key].position;
-
-
+        io.sockets.in(data.r).emit('board_update', player_positions);
     });
 
+    socket.on('start-game-request', function (data) {
 
-    io.sockets.in(data.r).emit('board_update', player_positions);
-});
+        rooms[data.r].players[data.p].name = data.name;
 
-socket.on('start-game-request', function (data) {
+        // if solo room or if room has two people:
+        if (data.solo === true || rooms[data.r].players.p1.name !== '' && rooms[data.r].players.p2.name !== '') {
+            build_LibraryCloud_requests(finalize_room, room_id);            
+        }
 
-    rooms[data.r].players[data.p].name = data.name;
-
-    // if solo room or if room has two people:
-
-    if (data.solo === true || Object.keys(rooms[data.r].players).length === 2){
-        build_LibraryCloud_requests(finalize_room, room_id);
-    }
-
-});
+    });
 
 socket.on('shelved', function (data) {
     io.sockets.in(data.r).emit('progress_update', data);
