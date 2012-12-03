@@ -61,7 +61,7 @@ var rooms = [];
 // We check this to see if there is an open room for a new user
 var open_room_id = false;
 
-var num_items_to_shelve = 2;
+var num_items_to_shelve = 5;
 
 // Socket.io business
 //io.set('loglevel',10) // set log level to get all debug messages
