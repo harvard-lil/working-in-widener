@@ -265,7 +265,7 @@ io.on('connection', function(socket){
         rooms[data.r].players[data.p].name = data.name;
 
         // if solo room or if room has two people:
-        if (data.solo === true || rooms[data.r].players.p1.name !== '' && rooms[data.r].players.p2.name !== '') {
+        if (data.solo === true || Object.keys(rooms[data.r].players).length === 2 && rooms[data.r].players.p1.name !== '' && rooms[data.r].players.p2.name !== '') {
             build_LibraryCloud_requests(finalize_room, room_id);            
         }
 
