@@ -13,6 +13,7 @@ $(function() {
         var current_board = 0;
         var ready = false;
         var current_book = 0;
+        var solo = true;
         $('#progress').data('current-book', current_book);
 
         // Socket.io stuff
@@ -85,6 +86,7 @@ $(function() {
                     }
                 }
 
+                // now redraw the player positions
                 $.each(data, function(index, value) { 
 
                     var target_i = $('.tile-row')[value.i];
@@ -123,16 +125,23 @@ $(function() {
             iosocket.on('ready', function(data) {
                 // The ready signal is when we have two players and all data loaded
                 // This is the equivalent of the waving of the checkered flag
-                var opponent_id = 'p1';
-                if (player_id === 'p1') {
-                    opponent_id = 'p2';
-                } 
+                
+                if (!solo) {
+                    var opponent_id = 'p1';
+                    if (player_id === 'p1') {
+                        opponent_id = 'p2';
+                    } 
+                    
+                    $('#opponent_name').text(data[opponent_id].name).addClass(opponent_id + '-text');                    
+                    $('#opponent-progress').addClass(opponent_id + 'progress');                    
+                    
+                }
 
                 $('#your_name').text(data[player_id].name).addClass(player_id + '-text');
-                $('#opponent_name').text(data[opponent_id].name).addClass(opponent_id + '-text');
+
 
                 $('#progress').addClass(player_id + 'progress');
-                $('#opponent-progress').addClass(opponent_id + 'progress');
+
 
                 ready = true;
                 $('#main').removeClass('light');
@@ -170,7 +179,7 @@ $(function() {
     $(document).keydown(function(e) {
 
         /** Get the current position */
-        if (ready && e.which === 32 || e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40)     {
+        if (ready && e.which === 32 || e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40) {
             var currently_selected = $('.' + player_id);
             var next_tile = currently_selected;
             var next_board = current_board;
@@ -276,7 +285,11 @@ $(function() {
     // On load, we display a hover panel. Get user's name and ask them to hit play.
     $('#name-form').submit(function() {
         if ($('#player-handle').val() !== "") {
-            var message = {p: player_id, r: room_id, name: $('#player-handle').val(), solo: false};
+            if ($('#num-players').val() === 'two_player') {
+                solo = false;
+            }
+            var message = {p: player_id, r: room_id, name: $('#player-handle').val(), solo: solo};
+
             iosocket.emit('start-game-request', message);
             $('#start-status').text('Waiting for your challenger.').addClass('status-update');
             $('#name-form').hide();

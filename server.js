@@ -71,8 +71,8 @@ var num_items_to_shelve = 5;
 // Shuffle our lists
 // Thanks to Jonas Raoni Soares Silva, http://jsfromhell.com/array/shuffle [v1.0]
 shuffle = function(o){ //v1.0
-for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-return o;
+    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
 };
 /////////// Helpers ///////////
 
@@ -131,78 +131,78 @@ var add_user = function(socket, solo) {
 };
 
 var add_LibraryCloud_doc = function(lc_response, room_id) {
-// We get a document from LibrrayCloud. Add it to the room data structure.
-var to_shelve_formatted = JSON.parse(lc_response);
+    // We get a document from LibrrayCloud. Add it to the room data structure.
+    var to_shelve_formatted = JSON.parse(lc_response);
 
-var creator = '(No Creator)';
+    var creator = '(No Creator)';
 
-if (to_shelve_formatted.docs[0].creator[0]) {
-    creator = to_shelve_formatted.docs[0].creator[0];
-}
+    if (to_shelve_formatted.docs[0].creator[0]) {
+        creator = to_shelve_formatted.docs[0].creator[0];
+    }
 
-// This thing is ugly. We're looping through the players in the room and adding the LibraryCloud doc to heir to_shelve list
-Object.keys(rooms[room_id].players).forEach(function(key) {
-    rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
-});
+    // This thing is ugly. We're looping through the players in the room and adding the LibraryCloud doc to heir to_shelve list
+    Object.keys(rooms[room_id].players).forEach(function(key) {
+        rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
+    });
 };
 
 var build_LibraryCloud_requests = function(finalize_room) {
-// Select a call number from our list of call numbers and fetch one
-// result from LibraryCloud based on that call number
+    // Select a call number from our list of call numbers and fetch one
+    // result from LibraryCloud based on that call number
 
-room_id = arguments[1];
+    room_id = arguments[1];
 
-for (var i = 0; i < num_items_to_shelve; i ++) {
+    for (var i = 0; i < num_items_to_shelve; i ++) {
 
-    var rand_index = Math.floor(Math.random() * (279 - 0 + 1)) + 0;
+        var rand_index = Math.floor(Math.random() * (279 - 0 + 1)) + 0;
 
-    var call_num = wid[rand_index];
+        var call_num = wid[rand_index];
 
-    var options = {
-        host: config.lc_host,
-        port: 80,
-        path: '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1',
-        method: 'GET'
-    };
+        var options = {
+            host: config.lc_host,
+            port: 80,
+            path: '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1',
+            method: 'GET'
+        };
 
-    //console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1');
+        //console.log('Getting: ' + '/v1/api/item/?filter=holding_libs:WID&filter=090a:' + call_num + '&limit=1');
 
-    // make the request, and then end it, to close the connection
-    var req = http.request(options, function(res) {
-        // Receive a response from LibraryCloud, pull out the title and call number
-        // and add it to our list. Do this num_items_to_shelve times.
+        // make the request, and then end it, to close the connection
+        var req = http.request(options, function(res) {
+            // Receive a response from LibraryCloud, pull out the title and call number
+            // and add it to our list. Do this num_items_to_shelve times.
 
-        var to_shelve_raw = "";
+            var to_shelve_raw = "";
 
-        // Keep tacking chunks on as we receive them.
-        res.on('data', function(chunk) {
-            to_shelve_raw += chunk;
-        });
+            // Keep tacking chunks on as we receive them.
+            res.on('data', function(chunk) {
+                to_shelve_raw += chunk;
+            });
 
-        // Finished receiving chunks? If so, package and pass off to our callback, finalize_room
-        res.on('end', function() {
-            var to_shelve_formatted = JSON.parse(to_shelve_raw);
+            // Finished receiving chunks? If so, package and pass off to our callback, finalize_room
+            res.on('end', function() {
+                var to_shelve_formatted = JSON.parse(to_shelve_raw);
 
-            var creator = '(No Creator)';
+                var creator = '(No Creator)';
 
-            if (to_shelve_formatted.docs[0].creator[0]) {
-                creator = to_shelve_formatted.docs[0].creator[0];
-            }
+                if (to_shelve_formatted.docs[0].creator[0]) {
+                    creator = to_shelve_formatted.docs[0].creator[0];
+                }
 
-            // This thing is ugly. We're looping through the players in the room and adding the LibraryCloud doc to heir to_shelve list
-            Object.keys(rooms[room_id].players).forEach(function(key) {
-                rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
+                // This thing is ugly. We're looping through the players in the room and adding the LibraryCloud doc to heir to_shelve list
+                Object.keys(rooms[room_id].players).forEach(function(key) {
+                    rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
+                });
+
+
+                finalize_room(room_id);		
             });
 
 
-            finalize_room(room_id);		
         });
 
-
-    });
-
-    req.end();
-}
+        req.end();
+    }
 
 };
 
@@ -244,7 +244,6 @@ io.on('connection', function(socket){
 
     // Add a user to a room
     var room_id = add_user(socket, false);
-
 
     socket.on('move', function (data) {
 
