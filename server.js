@@ -61,7 +61,10 @@ var rooms = [];
 // We check this to see if there is an open room for a new user
 var open_room_id = false;
 
-var num_items_to_shelve = 5;
+var num_items_to_shelve = 1;
+
+// Keep our leaderboard in memory. We'll populate it at startup and update after each game.
+var leader_board = [];
 
 // Socket.io business
 //io.set('loglevel',10) // set log level to get all debug messages
@@ -74,6 +77,36 @@ shuffle = function(o){ //v1.0
     for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
+
+// Get a pretty time
+// Thanks to http://stackoverflow.com/a/8212878
+function get_pretty_time(milliseconds){
+    // TIP: to find current time in milliseconds, use:
+    // var milliseconds_now = new Date().getTime();
+
+    var seconds = milliseconds / 1000;
+    var numyears = Math.floor(seconds / 31536000);
+    if(numyears){
+        return numyears + ' year' + ((numyears > 1) ? 's' : '');
+    }
+    var numdays = Math.floor((seconds % 31536000) / 86400);
+    if(numdays){
+        return numdays + ' day' + ((numdays > 1) ? 's' : '');
+    }
+    var numhours = Math.floor(((seconds % 31536000) % 86400) / 3600);
+    if(numhours){
+        return numhours + ' hour' + ((numhours > 1) ? 's' : '');
+    }
+    var numminutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60);
+    if(numminutes){
+        return numminutes + ' minute' + ((numminutes > 1) ? 's' : '');
+    }
+    var numseconds = (((seconds % 31536000) % 86400) % 3600) % 60;
+    if(numseconds){
+        return numseconds + ' second' + ((numseconds > 1) ? 's' : '');
+    }
+    return 'less then a second'; //'just now' //or other string you like;
+}
 /////////// Helpers ///////////
 
 var add_user = function(socket, solo) {
@@ -270,25 +303,71 @@ io.on('connection', function(socket){
 
     });
 
-socket.on('shelved', function (data) {
-    io.sockets.in(data.r).emit('progress_update', data);
-});
+    socket.on('shelved', function (data) {
+        io.sockets.in(data.r).emit('progress_update', data);
+    });
 
-socket.on('completed', function (data) {
-    var opponent_id = 'p1';
-    if (data.p === 'p1') {
-        opponent_id = 'p2';
-    }
+    socket.on('completed', function (data) {
 
-    // Thanks to http://stackoverflow.com/a/13219636
-    //var ds = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    //var log_message = ds + ' ' + rooms[data.r].player_info[data.p].name + ' beat ' + rooms[data.r].player_info[opponent_id].name;
+        // Thanks to http://stackoverflow.com/a/13219636
+        var ds = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        var pretty_time = get_pretty_time(data.elapsed_time);
+        var log_message = ds + ' ' + rooms[data.r].players[data.p].name;
+        var was_solo_game = true;
+        
+        var opponent_id = 'p1';
+        
+        if (Object.keys(rooms[data.r].players).length == 2) {
+            was_solo_game = false;
+        }
+        
+        if (!was_solo_game) {
 
-    //fs.open("matches.log", 'a', 0666, function(err, fd){
-        //    fs.write(fd, log_message, null, undefined, function (err, written) {
-            //    });
-            //});
+            if (data.p === 'p1') {
+                opponent_id = 'p2';
+            }
+            
+            log_message = log_message + ' bested ' + rooms[data.r].players[opponent_id].name;
+        } else {
+            log_message = log_message + ' won solo';
+        }
+    
+         log_message = log_message + ' in ' + pretty_time + '\n';
 
-            io.sockets.in(data.r).emit('winner', rooms[data.r].players[data.p].name);
+        fs.open("matches.log", 'a', 0666, function(err, fd){
+            fs.write(fd, log_message, null, undefined, function (err, written) {
+            });
         });
-    })
+        
+        // leader board object looks like this:
+        //  [
+        //      {num_ms: num_ms, play_type: solo, winner: username, date: time_stamp}},
+        //      {num_ms: num_ms, play_type: two_player, winner: username, loser: username, date: time_stamp}}
+        //  ]
+
+        var now = new Date().getTime();
+        var new_record = {num_ms: data.elapsed_time, play_type: 'solo', winner: rooms[data.r].players[data.p].name, date_played: now}
+        
+        if (!was_solo_game) {
+            new_record.play_type = 'two_player'
+             new_record.loser = rooms[data.r].players[opponent_id].name
+        }
+
+        
+        if (leader_board.length <= 20){
+            leader_board.push(new_record);
+            // We've added our new record, now sort
+            leader_board.sort(function(a,b) { return parseFloat(a.num_ms) - parseFloat(b.num_ms) } );
+        } else if (data.elapsed_time < leader_board[leader_board.length - 1].num_ms) {
+            leader_board[leader_board.length] = new_record;
+            // We've added our new record, now sort
+            leader_board.sort(function(a,b) { return parseFloat(a.num_ms) - parseFloat(b.num_ms) } );
+        }
+
+
+        console.log(leader_board);
+
+
+        io.sockets.in(data.r).emit('winner', {name: rooms[data.r].players[data.p].name, elapsed_time: pretty_time});
+    });
+})
