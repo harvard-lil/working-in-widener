@@ -29,7 +29,7 @@ $(function() {
                 cart_contents = data[player_id];
                 $('.title').html(cart_contents[current_book].title);
                 $('.current-target-callno').html(cart_contents[current_book].call_num);
-                $('.creator').html('by ' + cart_contents[current_book].creator);
+                $('.creator').html(cart_contents[current_book].creator);
                 current_callno = cart_contents[current_book].call_num;
             });
 
@@ -63,6 +63,8 @@ $(function() {
                     
                     if (current_board === 1) {
                         $('.bridge').addClass('blocked');
+                        
+                        $('#no-entry').show();
                         $('.north-bridge-wall').addClass('north-bridge-wall-disabled').removeClass('north-bridge-wall');
                         $('.west-bridge-wall-disabled').addClass('west-bridge-wall').removeClass('west-bridge-wall-disabled');
                         $('.south-bridge-wall').addClass('south-bridge-wall-disabled').removeClass('south-bridge-wall');
@@ -72,6 +74,8 @@ $(function() {
                         
                     } else {
                         $('.bridge').removeClass('blocked');
+                        
+                        $('#no-entry').hide();
                         $('.north-bridge-wall-disabled').addClass('north-bridge-wall').removeClass('north-bridge-wall-disabled');
                         $('.west-bridge-wall').addClass('west-bridge-wall-disabled').removeClass('west-bridge-wall');
                         $('.south-bridge-wall-disabled').addClass('south-bridge-wall').removeClass('south-bridge-wall-disabled');
@@ -189,9 +193,13 @@ $(function() {
                                 iosocket.emit('completed', {p: player_id, r: room_id});
                             }
                             else {
-                                $('.title').fadeOut().delay(500).html(cart_contents[current_book].title).fadeIn();
-                                $('.current-target-callno').fadeOut().delay(500).html(cart_contents[current_book].call_num).fadeIn();
-                                $('.creator').fadeOut().delay(500).html('by ' + cart_contents[current_book].creator).fadeIn();
+                                
+                                $('.current-target').fadeOut(500, function() {
+                                  $('.title').html(cart_contents[current_book].title);
+                                  $('.current-target-callno').html(cart_contents[current_book].call_num);
+                                  $('.creator').html('by ' + cart_contents[current_book].creator);
+                                }).fadeIn(500);
+                                
                                 current_callno = cart_contents[current_book].call_num;
                             }
                         }

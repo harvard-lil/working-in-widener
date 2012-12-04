@@ -13,6 +13,12 @@ body {
   float:left;
 }
 
+#no-entry {
+  position:absolute;
+  top:395px;
+  left:410px;
+}
+
 .tile {
 	/*border: solid 1px;*/
 	float: left;
@@ -103,41 +109,59 @@ body {
 }
 
 #callno_sign, #endcap_sign {
-  height:35px;
-  width:48px;
   background-color:#fff;
   display:none;
   position:absolute;
-  font-size:12px;
+  font-size:16px;
   text-align:center;
   padding-top:10px;
   border:1px solid #efefef;
 }
 
+#endcap_sign {
+  height:55px;
+  width:50px;
+}
+
+#callno_sign {
+  height:35px;
+  width:50px;
+}
+
 #dashboard {
-  padding:5px 5px 0 25px;
+  padding:5px 5px 0 20px;
   position: absolute;
   top: 0px;
   left:272px;
-  width:300px;
+  width:305px;
   height:290px;
   background-color:#fff;
 }
 
 .current-target {
-  margin-left: 25px;
+  margin-left: 20px;
   margin-top:5px;
   float:left;
+  background-color:#F1F1F9;
+  padding:10px;
+  border:2px solid #4C49A2;
+  height:235px;
+}
+
+.cover-label {
+  border: 1px solid #4C49A2;
+  background-color: #fff;
+  padding:4px 4px 4px 8px;
 }
 
 .title {
-  width:160px;
-  height:35px;
+  width:130px;
+  height:55px;
   overflow:hidden;
 }
 
 .creator {
-  width:160px;
+  width:146px;
   height:35px;
   overflow:hidden;
   margin-bottom:0px;
@@ -146,6 +170,12 @@ body {
 
 .current-target-callno {
   font-size:24px;
+  background-color:#fff;
+  margin-left:-13px;
+  padding:8px;
+  width:95px;
+  border:1px solid #4C49A2;
+  margin-top:30px;
 }
 
 .left {
