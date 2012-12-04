@@ -156,7 +156,7 @@ body {
 
 .title {
   width:130px;
-  height:55px;
+  height:53px;
   overflow:hidden;
 }
 
@@ -371,6 +371,11 @@ h1 {
   size:1.2em;
 }
 
+.winner p {
+  text-align:center;
+  font-size:1.5em;
+}
+
 .left {
     float: left;
 }
@@ -401,7 +406,7 @@ ul li:first-child {
 
 #message-panel{
     clear: both;
-    padding: 30px 0 0 150px;;
+    padding: 30px 0 0 40px;;
 }
 
 .status-update {
@@ -409,12 +414,11 @@ ul li:first-child {
 }
 
 #num-players {
-   width: 108px;
+   width: 200px;
    padding: 5px;
-   font-size: 10px;
-
+   font-size: 1.4em;
+   height:2.2em;
    border: 1px solid #ccc;
-   height: 24px;
 }
 
 /* form stuff -- start */
