@@ -195,7 +195,7 @@ $(function() {
                     case 32: // space
                 
                         var callno = $(currently_selected).data("callno");
-                        if(callno) {
+                        if (callno) {
                             if(callno === current_callno) {
                                 current_book = current_book + 1;
                                 $('#progress').data('current-book', current_book);
@@ -206,20 +206,20 @@ $(function() {
                                     var elapsed_time = now - start_time;
                                     iosocket.emit('completed', {p: player_id, r: room_id, elapsed_time: elapsed_time});
                                 }
-                            }
-                            else {
+                                else {
                             
-                                $('.current-target').fadeOut(500, function() {
-                                  $('.title').html(cart_contents[current_book].title);
-                                  $('.current-target-callno').html(cart_contents[current_book].call_num);
-                                  $('.creator').html('by ' + cart_contents[current_book].creator);
-                                }).fadeIn(500);
+                                    $('.current-target').fadeOut(500, function() {
+                                      $('.title').html(cart_contents[current_book].title);
+                                      $('.current-target-callno').html(cart_contents[current_book].call_num);
+                                      $('.creator').html('by ' + cart_contents[current_book].creator);
+                                    }).fadeIn(500);
                             
-                                current_callno = cart_contents[current_book].call_num;
+                                    current_callno = cart_contents[current_book].call_num;
 
-                            }
+                                }
         //                        $('#callno_sign').show().text(callno);
         //                        $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+                            }
                         }
                 
                         if ($(currently_selected).hasClass('stairs-up') && current_board !== 3) {
