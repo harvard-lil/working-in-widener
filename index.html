@@ -15,18 +15,20 @@
 		<div id="hover">
 			<h1>Working in Widener</h1>
 			<div>
-				<span class="left">
-					<img src="images/widener-8-bit.png">
-				</span>
-				<span class="right">
-					<h2>A simple game</h2>
-					<ul>
-						<li>Shelve five books before your opponent</li>
-						<li>Use the keyboard arrows to move</li>
-						<li>Use the spacebar for action: shelve a book or take the stairs</li>
-						<li>Of the utmost importance: have fun!</li>
-					</ul>
-				</span>
+				<div class="left">
+					<img id="widener-8-bit" src="images/widener-8-bit.png">
+				</div>
+				<div class="left">
+					<h2>Shelve five books before your opponent</h2>
+					<div class="mechanics left">
+					  <img class="arrow-keys" src="images/arrow-keys.png">
+						<p>Use the keyboard arrows to move</p>
+					</div>
+					<div class="mechanics left">
+					  <img class="spacebar" src="images/spacebar.png">
+						<p>Use the spacebar to shelve a book or take the stairs</p>
+					</div>
+				</div>
 			</div>
 			<div id="message-panel">
 				<form id="name-form">
@@ -38,6 +40,8 @@
 					<input type="submit" value="Play" class="button"/>
 				</form>
 			</div>
+			<a href="leader-board.html" class="left top-scores">Top Scores</a>
+			<img class="logo" src="images/liblabstamp.png"> <a href="http://librarylab.law.harvard.edu" class="right">A Harvard Library Innovation Lab Project</a>
 			<div id="start-status"></div>
 		</div>
 		<div id="main" class="light">
