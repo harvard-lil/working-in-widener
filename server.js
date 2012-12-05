@@ -43,7 +43,7 @@ res.sendfile(__dirname + '/static/images/widener-8-bit.png');
 var wid = ["DP612", "DP614", "DP615", "DP618", "DP621", "Q209", "Q223", "Q224", "Q295", "Q300", "DP622", "DP624", "DP625", "DP627", "DP628","Q305", "Q310", "Q315", "Q310", "Q320", "DP632", "DP635", "DP636", "DP638", "DP639", "Q325", "Q335", "Q336", "Q342", "Q350", "DP640", "DP641", "DP642", "DP646", "DP650", "Q360", "Q365", "Q370", "Q387", "Q390", "PG13", "PG135", "PG510", "M2", "M32", "M1503", "PG14", "PG303", "PG3223", "M21", "M1490", "M1507", "PG127", "PG305", "PG3225", "M24", "M1495", "M1509", "PG129", "PG406", "PG3235", "M25", "M1497", "M1513", "PG133", "PG507", "PG3435", "M30", "M1500", "M1518", "PH101", "PH107", "PH123", "PH124", "PH125", "BR450", "BR470", "BR479", "BR481", "BR500", "PH131", "PH135", "PH139", "PH159", "PH161","BR510", "BR515", "BR516", "BR516.5", "BR517", "PH225", "PH235", "PH241", "PH275", "PH279", "BR520", "BR525", "BR526", "BR530", "BR535", "PH285", "PH300", "PH301", "PH302", "PH303", "BR555", "BR560", "BR563", "BR570", "BR620", "DK403", "DK430", "DK439", "PB2369", "PB2813", "PB2856", "DK404", "DK432", "DK440", "PB2591", "PB2815", "PB2887", "DK411", "DK434", "DK441", "PB2808", "PB2831", "PB2891", "DK418", "DK435.5", "DK443", "PB2809", "PB2837", "PB2905", "DK420", "DK436", "DK448", "PB2811", "PB2839", "PB2931", "PN441", "PN451", "PN452", "PN453", "PN457", "DA3", "DA10", "DA11", "DA13", "DA16", "PN462", "PN466", "PN471", "PN472", "PN479","DA17", "DA18", "DA25", "DA26", "DA27", "PN481", "PN495", "PN500", "PN501", "PN503", "DA27.5", "DA28", "DA28.1", "DA28.2", "DA28.3", "PN504", "PN505", "PN507", "PN508", "PN509", "DA28.4", "DA28.7", "DA30", "DA32", "DA34", "F200", "F273", "F311", "E621", "E647", "E661", "F225", "F285", "F314", "E628", "E649", "E664", "F226", "F286", "F345", "E631", "E655", "E667", "F227", "F289", "F351", "E635", "E656", "E668", "F272", "F310", "F370", "E641", "E660", "E672", "PM731", "PM782", "PM921", "PM987", "PM988", "PS146", "PS147", "PS151", "PS152", "PS157", "PM989", "PM1021", "PM1022", "PM1023", "PM1024","PS163", "PS185", "PS201", "PS208", "PS211", "PM1272", "PM1855", "PM1883", "PM2073", "PM2076", "PS214", "PS221", "PS223", "PS225", "PS229", "PM2135", "PM2342", "PM2501", "PM2591", "PM3007", "PS243", "PS261", "PS271", "PS273", "PS277", "P361", "P375", "P501", "PS301", "PS323.5", "PS350", "P365", "P380", "P505", "PS303", "PS324", "PS351", "P367", "P381", "P511", "PS305", "PS325", "PS352", "P368", "P408", "P512", "PS316", "PS326", "PS369", "P371", "P409", "P525", "PS319", "PS332", "PS371"];
 
 // One or two players to each room. This helps us manage the socket.io messages
-var rooms = [];
+var rooms = {};
 
 // Our rooms get filled with objects. Something like:
 //{
@@ -127,14 +127,17 @@ var add_user = function(socket, solo) {
         rooms[solo_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: '', to_shelve: []};
 
         socket.join(solo_room_id);
-        socket.emit('player_assignment', 'p1');
+        //socket.emit('player_assignment', 'p1');
 
-        return solo_room_id;
+        room_and_player_details = {room_id: solo_room_id, player_id: 'p1'};
+
+        return room_and_player_details;
     }
 
 
     // If a user wants to play with another person, deal with a two player room
     var users_room_id;
+    var player_id;
 
     // Add a second player to a room
     if (open_room_id !== false) {
@@ -142,25 +145,31 @@ var add_user = function(socket, solo) {
         rooms[users_room_id].players.p2 = { position: {b: 2, i: 0, j: 1}, name: '', to_shelve: []};
 
         socket.join(users_room_id);
-        socket.emit('player_assignment', 'p2');
+        //socket.emit('player_assignment', 'p2');
 
+        player_id = 'p2';
         open_room_id = false;
-        } else { // create a new room id and set it up. Add the user. They'll wait for an opponent.
+    } else { // create a new room id and set it up. Add the user. They'll wait for an opponent.
         open_room_id = Math.floor(Math.random()*89999+10000);
         var now = new Date().getTime();
         rooms[open_room_id] = {start_time: now, players: {}};
         rooms[open_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: '', to_shelve: []};
 
         users_room_id = open_room_id;
-
+        player_id = 'p1';
+        
         socket.join(users_room_id);
-        socket.emit('player_assignment', 'p1');
+        //socket.emit('player_assignment', 'p1');
     }
 
-    // TODO: combine this with player assignment
-    socket.emit('room_assignment', users_room_id);
+    
 
-    return users_room_id;
+    // TODO: combine this with player assignment
+    //socket.emit('room_assignment', users_room_id);
+
+    room_and_player_details = {room_id: users_room_id, player_id: player_id};
+
+    return room_and_player_details;
 };
 
 var add_LibraryCloud_doc = function(lc_response, room_id) {
@@ -268,15 +277,15 @@ var finalize_room = function(room_id) {
 
         io.sockets.in(room_id).emit('shelve_list', to_shelve);
 
-        //build_LibraryCloud_requests(open_room_id);
+    
         io.sockets.in(room_id).emit('ready', player_info);
     }
 }
 
-io.on('connection', function(socket){
+// Set log level to 1. 1 = warn and error
+io.set('log level', 1);
 
-    // Add a user to a room
-    var room_id = add_user(socket, false);
+io.on('connection', function(socket){
 
     socket.on('move', function (data) {
 
@@ -285,21 +294,32 @@ io.on('connection', function(socket){
         // We do some repackaing here to support old code in the client:
         var player_positions = {};
 
-        Object.keys(rooms[room_id].players).forEach(function(key) {
-            player_positions[key] = rooms[room_id].players[key].position;
+        Object.keys(rooms[data.r].players).forEach(function(key) {
+            player_positions[key] = rooms[data.r].players[key].position;
         });
 
+
         io.sockets.in(data.r).emit('board_update', player_positions);
+        
     });
 
     socket.on('start-game-request', function (data) {
 
-        rooms[data.r].players[data.p].name = data.name;
+        // Add a user to a room
+        var room_and_player_details = add_user(socket, data.solo);
+        
+        //io.sockets.in(room_and_player_details.room_id).emit('assignments', room_and_player_details);
+        socket.emit('assignments', room_and_player_details);
+
+
+        
+        rooms[room_and_player_details.room_id].players[room_and_player_details.player_id].name = data.name;
 
         // if solo room or if room has two people:
-        if (data.solo === true || Object.keys(rooms[data.r].players).length === 2 && rooms[data.r].players.p1.name !== '' && rooms[data.r].players.p2.name !== '') {
-            build_LibraryCloud_requests(finalize_room, room_id);            
+        if (data.solo === true || Object.keys(rooms[room_and_player_details.room_id].players).length === 2 && rooms[room_and_player_details.room_id].players.p1.name !== '' && rooms[room_and_player_details.room_id].players.p2.name !== '') {
+            build_LibraryCloud_requests(finalize_room, room_and_player_details.room_id);            
         }
+
 
     });
 
@@ -365,9 +385,13 @@ io.on('connection', function(socket){
         }
 
 
-        console.log(leader_board);
+        //console.log(leader_board);
 
 
         io.sockets.in(data.r).emit('winner', {name: rooms[data.r].players[data.p].name, elapsed_time: pretty_time});
+        socket.leave(data.r);
+        socket.disconnect();
+            
+        delete rooms[data.r];
     });
 })
