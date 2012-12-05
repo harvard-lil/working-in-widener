@@ -510,3 +510,31 @@ ul li:first-child {
 /* form stuff -- end */
 
 /* Hovering control box -- end*/
+
+/* Leader board -- start */
+
+#content {
+  width: 850px ;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+
+table {
+	border-collapse: collapse;
+	text-align: left;
+	width: 100%;
+}
+table th {
+	font-size: 21px;
+	font-weight: normal;
+	padding: 10px 12px;
+	border-bottom: 2px solid #35235D;
+}
+
+table td {
+	font-size: 16px;
+	border-bottom: 1px solid #ccc;
+	padding: 6px 12px;
+}
+
+/* Leader board -- end */
