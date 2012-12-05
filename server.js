@@ -275,9 +275,9 @@ var finalize_room = function(room_id) {
             to_shelve[key] = rooms[room_id].players[key].to_shelve;
         });
 
-        io.sockets.in(room_id).emit('shelve_list', to_shelve);
+        console.log(to_shelve);
 
-    
+        io.sockets.in(room_id).emit('shelve_list', to_shelve);    
         io.sockets.in(room_id).emit('ready', player_info);
     }
 }

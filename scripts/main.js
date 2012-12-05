@@ -131,7 +131,6 @@ $(function() {
             iosocket.on('ready', function(data) {
                 // The ready signal is when we have two players and all data loaded
                 // This is the equivalent of the waving of the checkered flag
-                console.log('ready message received');
                 if (!solo) {
                     var opponent_id = 'p1';
                     if (player_id === 'p1') {
@@ -185,10 +184,8 @@ $(function() {
     // Board setup/game control stuff
     $(document).keydown(function(e) {
 
-        console.log(ready);
-
         /** Get the current position */
-        if (ready === true){
+        if (ready === true) {
             if (e.which === 32 || e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40) {
                 var currently_selected = $('.' + player_id);
                 var next_tile = currently_selected;
@@ -197,31 +194,32 @@ $(function() {
                 switch(e.keyCode) {
                     case 32: // space
                 
-                    var callno = $(currently_selected).data("callno");
-                    if(callno) {
-                        if(callno === current_callno) {
-                            current_book = current_book + 1;
-                            $('#progress').data('current-book', current_book);
-                            iosocket.emit('shelved', {p: player_id, c: current_book});
-                            if(current_book == cart_contents.length) {
-                                // Send elapsed time for leader board
-                                var now = new Date().getTime();
-                                var elapsed_time = now - start_time;
-                                iosocket.emit('completed', {p: player_id, r: room_id, elapsed_time: elapsed_time});
+                        var callno = $(currently_selected).data("callno");
+                        if(callno) {
+                            if(callno === current_callno) {
+                                current_book = current_book + 1;
+                                $('#progress').data('current-book', current_book);
+                                iosocket.emit('shelved', {p: player_id, c: current_book});
+                                if(current_book == cart_contents.length) {
+                                    // Send elapsed time for leader board
+                                    var now = new Date().getTime();
+                                    var elapsed_time = now - start_time;
+                                    iosocket.emit('completed', {p: player_id, r: room_id, elapsed_time: elapsed_time});
+                                }
                             }
                             else {
-                                
+                            
                                 $('.current-target').fadeOut(500, function() {
                                   $('.title').html(cart_contents[current_book].title);
                                   $('.current-target-callno').html(cart_contents[current_book].call_num);
                                   $('.creator').html('by ' + cart_contents[current_book].creator);
                                 }).fadeIn(500);
-                                
+                            
                                 current_callno = cart_contents[current_book].call_num;
 
                             }
-    //                        $('#callno_sign').show().text(callno);
-    //                        $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
+        //                        $('#callno_sign').show().text(callno);
+        //                        $('#callno_sign').css("top", tile_position.top + 35).css("left", tile_position.left - 7);
                         }
                 
                         if ($(currently_selected).hasClass('stairs-up') && current_board !== 3) {
