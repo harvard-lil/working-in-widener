@@ -19,14 +19,18 @@ catch (err) {
 // Start node
 server.listen(config.node_port);
 
+// Set our express options
+app.set("jsonp callback", true);
+
 // Routing handled by express
 // Commented out because we're serving this from Apache. Uncomment to serve
 // everything from node
+
+app.get('/leader-board.json', function (req, res) {
+     res.jsonp(leader_board);
+});
 /*app.get('/', function (req, res) {
 res.sendfile(__dirname + '/static/index.html');
-});
-app.get('/style.css', function (req, res) {
-res.sendfile(__dirname + '/static/style.css');
 });
 app.get('/shelve-game.js', function (req, res) {
 res.sendfile(__dirname + '/static/shelve-game.js');
@@ -65,6 +69,15 @@ var num_items_to_shelve = 5;
 
 // Keep our leaderboard in memory. We'll populate it at startup and update after each game.
 var leader_board = [];
+
+// If we have a leaderboard on disk, populate our leader_board var;
+fs.readFile('leader-board', 'utf8', function (err,data) {
+  if (err) {
+    return console.log('Unable to load leader-board from disk');
+  }
+  
+  leader_board = JSON.parse(data);
+});
 
 // Socket.io business
 //io.set('loglevel',10) // set log level to get all debug messages
@@ -275,8 +288,6 @@ var finalize_room = function(room_id) {
             to_shelve[key] = rooms[room_id].players[key].to_shelve;
         });
 
-        console.log(to_shelve);
-
         io.sockets.in(room_id).emit('shelve_list', to_shelve);    
         io.sockets.in(room_id).emit('ready', player_info);
     }
@@ -384,9 +395,12 @@ io.on('connection', function(socket){
             leader_board.sort(function(a,b) { return parseFloat(a.num_ms) - parseFloat(b.num_ms) } );
         }
 
-
-        //console.log(leader_board);
-
+        // Write our updated leaderboard to disk for safe keeping
+        fs.open("leader-board", 'w', 0666, function(err, fd) {
+            var serialized_leader_board = JSON.stringify(leader_board);
+            fs.write(fd, serialized_leader_board, null, undefined, function (err, written) {
+            });
+        });
 
         io.sockets.in(data.r).emit('winner', {name: rooms[data.r].players[data.p].name, elapsed_time: pretty_time});
         socket.leave(data.r);
