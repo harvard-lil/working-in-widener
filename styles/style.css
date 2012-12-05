@@ -519,6 +519,12 @@ ul li:first-child {
   margin-right: auto ;
 }
 
+#content h1 img {
+    float: right;
+    margin-top: -50px;
+    padding-right: 30px;
+}
+
 table {
 	border-collapse: collapse;
 	text-align: left;
