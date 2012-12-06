@@ -290,15 +290,20 @@ var clean_rooms = function() {
         Object.keys(rooms).forEach(function(key) {
             var now = new Date().getTime();
             var age = now - rooms[key].start_time;
+            
             // If the room is older than 20 minutes, kick everyone out and delete it
             if (age > 1200000) {
+                io.sockets.in(key).emit('booted', true);
                 var clients = io.sockets.clients(key);                
                 for (var i = 0; i < clients.length; i ++) {
                     clients[i].disconnect();
                 }
-                io.sockets.in(key).emit('booted', true);
+
                 delete rooms[key];
-                
+
+                if (open_room_id === key) {
+                    open_room_id = false;
+                }
             }
         });
 }
@@ -335,8 +340,6 @@ io.on('connection', function(socket){
         //io.sockets.in(room_and_player_details.room_id).emit('assignments', room_and_player_details);
         socket.emit('assignments', room_and_player_details);
 
-
-        
         rooms[room_and_player_details.room_id].players[room_and_player_details.player_id].name = data.name;
 
         // if solo room or if room has two people:
