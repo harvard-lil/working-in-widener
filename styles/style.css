@@ -28,6 +28,10 @@ body {
 	background-color:#f1f1f9;
 }
 
+.extra-tall {
+  height:31px;
+}
+
 .west-wall {
   border-left:solid 1px #0b0713;
 }
@@ -394,14 +398,19 @@ h1 {
     margin-bottom:35px;
 }
 
-#hover a {
+.footer {
+  max-width: 800px;
+  margin: 0px auto;
+}
+
+.footer a {
   font-size:.8em;
   text-decoration:none;
   display:block;
   margin-top:35px;
 }
 
-#hover a.top-scores {
+.footer a.top-scores {
   font-size:1.1em;
   text-decoration:none;
   color:#DB2464;
