@@ -68,8 +68,8 @@ body {
   border-bottom: solid 1px;
 }
 
-.stairs {
-  /*background: url("../images/stairs.png") no-repeat #efefef;*/
+.stairs-outside {
+  background-color: #fff;
 }
 
 .stairs-up {
