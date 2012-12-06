@@ -73,7 +73,7 @@ var leader_board = [];
 // If we have a leaderboard on disk, populate our leader_board var;
 fs.readFile('leader-board', 'utf8', function (err,data) {
   if (err) {
-    return console.log('Unable to load leader-board from disk');
+    return console.log('Unable to load leader-board from disk. I\'ll try to create a new one.');
   }
   
   leader_board = JSON.parse(data);
@@ -305,7 +305,7 @@ var clean_rooms = function() {
                 for (var i = 0; i < clients.length; i ++) {
                     clients[i].disconnect();
                 }
-
+                io.sockets.in(key).emit('booted', true);
                 delete rooms[key];
                 
             }
