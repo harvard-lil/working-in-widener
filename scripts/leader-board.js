@@ -18,7 +18,7 @@ $(function() {
                     table_markup = table_markup + "<tr><td>" + (key + 1) + "</td><td>" + val.winner + "</td><td>";
                     
                     if (val.play_type === "solo") {
-                        table_markup = table_markup + "Solo game</td><td>";
+                        table_markup = table_markup + "solo game</td><td>";
                     } else {
                         table_markup = table_markup + "against " + val.loser + "</td><td>";
                     }

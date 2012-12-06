@@ -177,7 +177,9 @@ $(function() {
 
 
         iosocket.on('disconnect', function() {
-            //console.log('disconnected');
+            $('#hover').html('<p>You have been the disconnected from the Working in Widener server. This means that you\'ve been idle for too long or that something went wrong. Sorry. Refresh to try again.</p>');
+            $('#main').addClass('light');
+            $('#hover').show();
         });
     });
 

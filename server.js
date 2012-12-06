@@ -293,10 +293,32 @@ var finalize_room = function(room_id) {
     }
 }
 
+var clean_rooms = function() {
+    // If we have any old rooms sitting around, let's kick the folks out and delete the room
+    
+        Object.keys(rooms).forEach(function(key) {
+            var now = new Date().getTime();
+            var age = now - rooms[key].start_time;
+            // If the room is older than 20 minutes, kick everyone out and delete it
+            if (age > 1200000) {
+                var clients = io.sockets.clients(key);                
+                for (var i = 0; i < clients.length; i ++) {
+                    clients[i].disconnect();
+                }
+
+                delete rooms[key];
+                
+            }
+        });
+}
+
 // Set log level to 1. 1 = warn and error
 io.set('log level', 1);
 
 io.on('connection', function(socket){
+
+    // Take care of some room maintenance whenever we get a new player
+    clean_rooms();
 
     socket.on('move', function (data) {
 
