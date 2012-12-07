@@ -5,12 +5,13 @@ body {
 
 #main {
     width: 1150px;
-    margin:20px auto 0px;
+    margin:20px auto 0px auto;
     position:relative;
 }
 
 #container {
   float:left;
+  margin-left:30px;
 }
 
 #no-entry {
@@ -139,7 +140,7 @@ body {
   padding:5px 5px 0 20px;
   position: absolute;
   top: 0px;
-  left:272px;
+  left:302px;
   width:305px;
   height:290px;
   background-color:#fff;
@@ -270,6 +271,7 @@ body {
   height:132px;
   margin-top:-3px;
   margin-bottom:2px;
+  margin-right:0px;
 }
 
 .legend.current-legend {

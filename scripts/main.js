@@ -1,6 +1,11 @@
 $(function() {
     // Load our config
     var config;
+    var window_height = $(window).height();
+    if(window_height > 650) {
+      var top_margin = (window_height - 650)/2;
+      $('#main').css('margin-top', top_margin);
+    }
 
     $.getJSON("config.json", function(json) {
         config = json;
