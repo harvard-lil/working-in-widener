@@ -58,8 +58,10 @@ $(function() {
                     
                     if (current_board === 0) {
                         $('.stairs-down').addClass('stairs-down-disabled').removeClass('stairs-down');
+                        $('.stairs-down-disabled.stairs-outside').addClass('stairs-outside-disabled');
                     } else {
                         $('.stairs-down-disabled').addClass('stairs-down').removeClass('stairs-down-disabled');
+                        $('.stairs-down').removeClass('stairs-outside-disabled');
                     }
                     
                     if (current_board === 1) {
@@ -87,8 +89,10 @@ $(function() {
                     
                     if (current_board === 3) {
                         $('.stairs-up').addClass('stairs-up-disabled').removeClass('stairs-up');
+                        $('.stairs-up-disabled.stairs-outside').addClass('stairs-outside-disabled');
                     } else {
                         $('.stairs-up-disabled').addClass('stairs-up').removeClass('stairs-up-disabled');
+                        $('.stairs-up').removeClass('stairs-outside-disabled');
                     }
                 }
 
@@ -178,10 +182,18 @@ $(function() {
 
 
         iosocket.on('disconnect', function() {
+            //console.log('disconnect')
+        });
+        
+
+        iosocket.on('booted', function(data) {
             $('#hover').html('<p>You have been the disconnected from the Working in Widener server. This means that you\'ve been idle for too long or that something went wrong. Sorry. Refresh to try again.</p>');
             $('#main').addClass('light');
             $('#hover').show();
+
         });
+
+        
     });
 
     // Board setup/game control stuff
@@ -292,7 +304,7 @@ $(function() {
                 var message = {p: player_id, r: room_id, b: next_board, i: i_pl, j: j_pl, c: c_book};
 
                 // Sometimes we don't actually move (when a user tries to walk into a wall)
-                if(!$(next_tile).hasClass('blocked')){
+                if(!$(next_tile).hasClass('blocked') && !$(next_tile).hasClass('stairs-outside-disabled')){
                     iosocket.emit('move', message);
                 }
             }
@@ -301,15 +313,20 @@ $(function() {
 
     // On load, we display a hover panel. Get user's name and ask them to hit play.
     $('#name-form').submit(function() {
-        if ($('#player-handle').val() !== "") {
+        if ($('#player-handle').val() !== "Waiting for your challenger.") {
+
+            var waiting_message = "Loading books on your cart now";
+            
             if ($('#num-players').val() === 'two_player') {
                 solo = false;
+                waiting_message = ""
             }
             //var message = {p: player_id, r: room_id, name: $('#player-handle').val(), solo: solo};
             var message = {name: $('#player-handle').val(), solo: solo};
 
             iosocket.emit('start-game-request', message);
-            $('#start-status').text('Waiting for your challenger.').addClass('status-update');
+            
+            $('#start-status').text(waiting_message).addClass('status-update');
             $('#name-form').hide();
         } else{
             // The box loses focus. refocus.

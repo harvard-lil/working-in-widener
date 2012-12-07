@@ -84,6 +84,9 @@ body {
   background: url("../images/stairs-down.png") no-repeat #efefef;
 }
 
+.stairs-outside-disabled {
+    background-clear: #fff;
+}
 
 .tile-row {
 	clear:left;

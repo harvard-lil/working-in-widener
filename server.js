@@ -73,7 +73,7 @@ var leader_board = [];
 // If we have a leaderboard on disk, populate our leader_board var;
 fs.readFile('leader-board', 'utf8', function (err,data) {
   if (err) {
-    return console.log('Unable to load leader-board from disk');
+    return console.log('Unable to load leader-board from disk. I\'ll try to create a new one.');
   }
   
   leader_board = JSON.parse(data);
@@ -97,28 +97,19 @@ function get_pretty_time(milliseconds){
     // TIP: to find current time in milliseconds, use:
     // var milliseconds_now = new Date().getTime();
 
+    var return_string = '';
+
     var seconds = milliseconds / 1000;
-    var numyears = Math.floor(seconds / 31536000);
-    if(numyears){
-        return numyears + ' year' + ((numyears > 1) ? 's' : '');
-    }
-    var numdays = Math.floor((seconds % 31536000) / 86400);
-    if(numdays){
-        return numdays + ' day' + ((numdays > 1) ? 's' : '');
-    }
-    var numhours = Math.floor(((seconds % 31536000) % 86400) / 3600);
-    if(numhours){
-        return numhours + ' hour' + ((numhours > 1) ? 's' : '');
-    }
+
     var numminutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60);
     if(numminutes){
-        return numminutes + ' minute' + ((numminutes > 1) ? 's' : '');
+        return_string += numminutes + ' min' + ((numminutes > 1) ? 's' : '') + ', ';
     }
     var numseconds = (((seconds % 31536000) % 86400) % 3600) % 60;
     if(numseconds){
-        return numseconds + ' second' + ((numseconds > 1) ? 's' : '');
+        return_string += numseconds.toFixed(3) + ' sec' + ((numseconds > 1) ? 's' : '');
     }
-    return 'less then a second'; //'just now' //or other string you like;
+    return return_string;
 }
 /////////// Helpers ///////////
 
@@ -299,15 +290,20 @@ var clean_rooms = function() {
         Object.keys(rooms).forEach(function(key) {
             var now = new Date().getTime();
             var age = now - rooms[key].start_time;
+            
             // If the room is older than 20 minutes, kick everyone out and delete it
             if (age > 1200000) {
+                io.sockets.in(key).emit('booted', true);
                 var clients = io.sockets.clients(key);                
                 for (var i = 0; i < clients.length; i ++) {
                     clients[i].disconnect();
                 }
 
                 delete rooms[key];
-                
+
+                if (open_room_id === key) {
+                    open_room_id = false;
+                }
             }
         });
 }
@@ -344,8 +340,6 @@ io.on('connection', function(socket){
         //io.sockets.in(room_and_player_details.room_id).emit('assignments', room_and_player_details);
         socket.emit('assignments', room_and_player_details);
 
-
-        
         rooms[room_and_player_details.room_id].players[room_and_player_details.player_id].name = data.name;
 
         // if solo room or if room has two people:
