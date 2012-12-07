@@ -109,7 +109,7 @@ $(function() {
                         $('.stairs').css('background-position', '0px 0px');
                     
                         $(target_tile).addClass(index);
-                        $(target_tile).css('background-position', '0px -' + 31 * value.c + 'px');
+                        $(target_tile).css('background-position', '0px -' + 30 * value.c + 'px');
 
                     } else {
                         $('.' + index).removeClass(index);
@@ -122,12 +122,12 @@ $(function() {
                         $('#callno_sign, #endcap_sign').hide();
                         if(callno) {
                             $('#callno_sign').show().text(callno);
-                            $('#callno_sign').css("top", tile_position.top + 31).css("left", tile_position.left - 7);
+                            $('#callno_sign').css("top", tile_position.top + 30).css("left", tile_position.left - 7);
                         }
                         var sign = $(target_tile).data("sign");
                         if(sign) { 
                             $('#endcap_sign').show().text(sign);
-                            $('#endcap_sign').css("top", tile_position.top + 31).css("left", tile_position.left - 7);
+                            $('#endcap_sign').css("top", tile_position.top + 30).css("left", tile_position.left - 7);
                         }
                     }
                 });
