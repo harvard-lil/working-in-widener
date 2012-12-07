@@ -29,7 +29,7 @@ body {
 }
 
 .extra-tall {
-  height:31px;
+  border-bottom:1px solid #f1f1f9;
 }
 
 .west-wall {
