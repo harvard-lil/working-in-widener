@@ -385,6 +385,10 @@ h1 {
   font-size:1.5em;
 }
 
+.winner .footer {
+    margin-top: 100px;
+}
+
 .left {
     float: left;
 }
