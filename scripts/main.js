@@ -179,7 +179,7 @@ $(function() {
             $('#hover').html('<h1>' + data.name + ' WINS!</h1>').addClass('winner');
             $('#hover').append('<p> in ' + data.elapsed_time + '</p>');
             $('#hover').append('<div id="#start-status" class="status-update"><a href="." class="button">Start a new game?</a></div>');
-            $('#hover').append('<div class="footer"><a href="leader-board.html" class="left top-scores">Top Scores</a><img class="logo" src="images/liblabstamp.png"> <a href="http://librarylab.law.harvard.edu" class="right">A Harvard Library Innovation Lab Project</a></div>');
+            $('#hover').append('<div class="footer"><a href="top-scores.html" class="left top-scores">Top Scores</a><img class="logo" src="images/liblabstamp.png"> <a href="http://librarylab.law.harvard.edu" class="right">A Harvard Library Innovation Lab Project</a></div>');
             $('#main').addClass('light');
             $('#hover').show();
             //$('#dashboard').text(data + ' WINS!').css('font-size', '108px');

@@ -399,7 +399,6 @@ io.on('connection', function(socket){
             new_record.play_type = 'two_player'
              new_record.loser = rooms[data.r].players[opponent_id].name
         }
-
         
         if (leader_board.length <= 20){
             leader_board.push(new_record);
