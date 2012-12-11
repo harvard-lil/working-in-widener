@@ -172,7 +172,7 @@ $(function() {
 
             iosocket.on('winner', function(data) {
                 ready = false;
-                //iosocket.disconnect()
+                iosocket.disconnect()
                 $('#hover').html('<h1>' + data.name + ' WINS!</h1>').addClass('winner');
                 $('#hover').append('<p> in ' + data.elapsed_time + '</p>');
                 $('#hover').append('<div id="#start-status" class="status-update"><a href="." class="button">Start a new game?</a></div>');

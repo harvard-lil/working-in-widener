@@ -293,16 +293,18 @@ io.on('connection', function(socket){
     socket.on('move', function (data) {
         // Anytime a client moves on the board, we update the client(s) in the room. (if playing solo
         // the user just broadcasts back to herself)
-        rooms[data.r].players[data.p].position = {b: data.b, i: data.i, j: data.j, c: data.c};
+        if (rooms[data.r]) {
+            rooms[data.r].players[data.p].position = {b: data.b, i: data.i, j: data.j, c: data.c};
 
-        // We do some repackaing here to support old code in the client:
-        var player_positions = {};
+            // We do some repackaing here to support old code in the client:
+            var player_positions = {};
 
-        Object.keys(rooms[data.r].players).forEach(function(key) {
-            player_positions[key] = rooms[data.r].players[key].position;
-        });
+            Object.keys(rooms[data.r].players).forEach(function(key) {
+                player_positions[key] = rooms[data.r].players[key].position;
+            });
 
-        io.sockets.in(data.r).emit('board_update', player_positions);
+            io.sockets.in(data.r).emit('board_update', player_positions);
+        }
     });
 
     socket.on('start-game-request', function (data) {
