@@ -65,7 +65,7 @@ var rooms = {};
 // We check this to see if there is an open room for a new user
 var open_room_id = false;
 
-var num_items_to_shelve = 1;
+var num_items_to_shelve = 5;
 
 // Keep our leaderboard in memory. We'll populate it at startup and update after each game.
 var leader_board = [];
