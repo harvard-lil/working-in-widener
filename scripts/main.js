@@ -213,7 +213,7 @@ $(function() {
                                if(callno === current_callno) {
                                 current_book = current_book + 1;
                                 $('#progress').data('current-book', current_book);
-                                iosocket.emit('shelved', {p: player_id, c: current_book});
+                                iosocket.emit('shelved', {p: player_id, r: room_id, c: current_book});
                                 if(current_book == cart_contents.length) {
                                     // Send elapsed time for leader board
                                     var now = new Date().getTime();
