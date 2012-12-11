@@ -17,7 +17,7 @@ body {
 #no-entry {
   position:absolute;
   top:395px;
-  left:410px;
+  left:438px;
 }
 
 .tile {
@@ -276,13 +276,13 @@ body {
 
 .legend.current-legend {
   border:3px solid #B8DC3C;
-  background-position:5px 35px;
+  background-position:5px 30px;
   margin-left: -6px;
 }
 
 .legend-no-tunnel {
   background: url("../images/legend-no-tunnel.png") no-repeat;
-  background-position: 1px 35px;
+  background-position: 1px 30px;
 }
 
 .legend h1 {
