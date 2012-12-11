@@ -94,9 +94,6 @@ shuffle = function(o){ //v1.0
 // Get a pretty time
 // Thanks to http://stackoverflow.com/a/8212878
 function get_pretty_time(milliseconds){
-    // TIP: to find current time in milliseconds, use:
-    // var milliseconds_now = new Date().getTime();
-
     var return_string = '';
 
     var seconds = milliseconds / 1000;
@@ -118,7 +115,7 @@ var add_user = function(socket, solo) {
     // create a room, add it to the global rooms, and send them on their way.
     //
     // If a user wants to play with another person, find an open room (a room
-    // with one player wiatingfor them.) if no open room, create one and they'll
+    // with one player wiating for them.) if no open room, create one and they'll
     // wait for a partner
     //
     // return the user's room_id 
@@ -131,13 +128,11 @@ var add_user = function(socket, solo) {
         rooms[solo_room_id].players.p1 = { position: {b: 2, i: 0, j: 0}, name: '', to_shelve: []};
 
         socket.join(solo_room_id);
-        //socket.emit('player_assignment', 'p1');
 
         room_and_player_details = {room_id: solo_room_id, player_id: 'p1'};
 
         return room_and_player_details;
     }
-
 
     // If a user wants to play with another person, deal with a two player room
     var users_room_id;
@@ -166,30 +161,9 @@ var add_user = function(socket, solo) {
         //socket.emit('player_assignment', 'p1');
     }
 
-    
-
-    // TODO: combine this with player assignment
-    //socket.emit('room_assignment', users_room_id);
-
     room_and_player_details = {room_id: users_room_id, player_id: player_id};
 
     return room_and_player_details;
-};
-
-var add_LibraryCloud_doc = function(lc_response, room_id) {
-    // We get a document from LibrrayCloud. Add it to the room data structure.
-    var to_shelve_formatted = JSON.parse(lc_response);
-
-    var creator = '(No Creator)';
-
-    if (to_shelve_formatted.docs[0].creator[0]) {
-        creator = to_shelve_formatted.docs[0].creator[0];
-    }
-
-    // This thing is ugly. We're looping through the players in the room and adding the LibraryCloud doc to heir to_shelve list
-    Object.keys(rooms[room_id].players).forEach(function(key) {
-        rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
-    });
 };
 
 var build_LibraryCloud_requests = function(finalize_room) {
@@ -240,7 +214,6 @@ var build_LibraryCloud_requests = function(finalize_room) {
                     rooms[room_id].players[key].to_shelve.push({title: to_shelve_formatted.docs[0].title, creator: creator, call_num: to_shelve_formatted.docs[0].source_record['090a']});
                 });
 
-
                 finalize_room(room_id);		
             });
 
@@ -249,15 +222,15 @@ var build_LibraryCloud_requests = function(finalize_room) {
 
         req.end();
     }
-
 };
 
 var finalize_room = function(room_id) {
-    // Our rooms get filled with objects. Something like:
+    //  If the room has the right number of players and the docs loaded from LibraryCloud, 
+    // send a notice to the room occupant(s) so that they can begin playing
 
     if (num_items_to_shelve === rooms[room_id].players.p1.to_shelve.length) {
 
-        // This thing is ugly. If we have all of our items to shelve, loop through each player in the room and shuffle them
+        // If we have all of our items to shelve, loop through each player in the room and shuffle them
         Object.keys(rooms[room_id].players).forEach(function(key) {
             var shuffled_items = shuffle(rooms[room_id].players[key].to_shelve);
             rooms[room_id].players[key].to_shelve = shuffled_items;
@@ -279,7 +252,8 @@ var finalize_room = function(room_id) {
             to_shelve[key] = rooms[room_id].players[key].to_shelve;
         });
 
-        io.sockets.in(room_id).emit('shelve_list', to_shelve);    
+        // Wave the checkered flag to the occupants of the room. They're ready to play.
+        io.sockets.in(room_id).emit('shelve_list', to_shelve);
         io.sockets.in(room_id).emit('ready', player_info);
     }
 }
@@ -313,11 +287,12 @@ io.set('log level', 1);
 
 io.on('connection', function(socket){
 
-    // Take care of some room maintenance whenever we get a new player
+    // Take care of some maintenance whenever we get a new player
     clean_rooms();
 
     socket.on('move', function (data) {
-
+        // Anytime a client moves on the board, we update the client(s) in the room. (if playing solo
+        // the user just broadcasts back to herself)
         rooms[data.r].players[data.p].position = {b: data.b, i: data.i, j: data.j, c: data.c};
 
         // We do some repackaing here to support old code in the client:
@@ -327,13 +302,12 @@ io.on('connection', function(socket){
             player_positions[key] = rooms[data.r].players[key].position;
         });
 
-
         io.sockets.in(data.r).emit('board_update', player_positions);
-        
     });
 
     socket.on('start-game-request', function (data) {
-
+        // User has submitted the number of players/username form. They're ready to play
+        
         // Add a user to a room
         var room_and_player_details = add_user(socket, data.solo);
         
@@ -346,15 +320,17 @@ io.on('connection', function(socket){
         if (data.solo === true || Object.keys(rooms[room_and_player_details.room_id].players).length === 2 && rooms[room_and_player_details.room_id].players.p1.name !== '' && rooms[room_and_player_details.room_id].players.p2.name !== '') {
             build_LibraryCloud_requests(finalize_room, room_and_player_details.room_id);            
         }
-
-
     });
 
     socket.on('shelved', function (data) {
+        // Client has shelved a book. update the client(s) in the room
+        
         io.sockets.in(data.r).emit('progress_update', data);
     });
 
     socket.on('completed', function (data) {
+        // If someone in the room has finished shelving all books, record the time in the log and
+        // possibly the top scores, send a message out to the client(s) in the room and disconnect them
 
         // Thanks to http://stackoverflow.com/a/13219636
         var ds = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
@@ -399,7 +375,6 @@ io.on('connection', function(socket){
             new_record.play_type = 'two_player'
              new_record.loser = rooms[data.r].players[opponent_id].name
         }
-
         
         if (leader_board.length <= 20){
             leader_board.push(new_record);

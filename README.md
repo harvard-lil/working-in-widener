@@ -1,6 +1,6 @@
 #Working in Widener
 
-Working in Widener is a two player game. You duel, in your web browser, against a live person. The first one to shelve the assigned books wins. Maps are based on real library maps from Harvard's Widener Library.
+Working in Widener is an educational game. You assume the role of a shelver working in Harvard's Widener Library. You are assigned five books to shelve and asked to find their places in the stacks using their call numbers. The faster the better.
 
 ## Installation
 

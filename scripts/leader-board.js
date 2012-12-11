@@ -5,7 +5,6 @@ $(function() {
     $.getJSON("config.json", function(json) {
         config = json;
    
-   
         $.ajax({
             type : "GET",
             dataType : "jsonp",
@@ -33,7 +32,11 @@ $(function() {
                     console.log(thrownError);
                   }
         });        
-});        
+});
+
+   ///////////////////////////////////////////////////
+   // Some helper methods   
+   ///////////////////////////////////////////////////
    // Get a pretty time
    // Thanks to http://stackoverflow.com/a/8212878
    function get_pretty_time(milliseconds){
@@ -180,4 +183,8 @@ $(function() {
    Date.prototype.format = function (mask, utc) {
    	return dateFormat(this, mask, utc);
    };
+   
+   ///////////////////////////////////////////////////
+   // End of helpers
+   ///////////////////////////////////////////////////
 });
