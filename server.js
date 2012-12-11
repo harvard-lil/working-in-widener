@@ -376,12 +376,14 @@ io.on('connection', function(socket){
              new_record.loser = rooms[data.r].players[opponent_id].name
         }
         
-        if (leader_board.length <= 20){
+        // If we have less 24 or less, just add our score to the list, else, see if it's better
+        // than the last score on the list, then sort
+        if (leader_board.length <= 24) {
             leader_board.push(new_record);
             // We've added our new record, now sort
             leader_board.sort(function(a,b) { return parseFloat(a.num_ms) - parseFloat(b.num_ms) } );
         } else if (data.elapsed_time < leader_board[leader_board.length - 1].num_ms) {
-            leader_board[leader_board.length] = new_record;
+            leader_board[leader_board.length - 1] = new_record;
             // We've added our new record, now sort
             leader_board.sort(function(a,b) { return parseFloat(a.num_ms) - parseFloat(b.num_ms) } );
         }

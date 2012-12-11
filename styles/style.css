@@ -429,12 +429,17 @@ h1 {
   font-size:1.0em;
 }
 
+
 .logo {
   display:inline-block;
   float:right;
   margin-left:8px;
   margin-top:20px;
   height:50px;
+}
+
+.logo.non-hover{
+    margin-bottom: 15px;
 }
 
 #widener-8-bit {
