@@ -163,10 +163,10 @@ $(function() {
             iosocket.on('progress_update', function(data) {
 
                 if(data.p != player_id) {
-                    $('.' + data.p + 'progress').fadeOut('fast').delay(500).fadeIn('fast', function() { $(this).css('background-position', '0px -' + 100 * data.c + 'px');});
+                    $('.opponent-progress').fadeOut('fast').delay(500).fadeIn('fast', function() { $(this).css('background-position', '0px -' + 100 * data.c + 'px');});
                 }
                 else {
-                    $('.' + data.p + 'progress').css('background-position', '0px -' + 100 * data.c + 'px');
+                    $('.progress').css('background-position', '0px -' + 100 * data.c + 'px');
                 }
             });
 
