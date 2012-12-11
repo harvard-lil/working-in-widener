@@ -1,5 +1,9 @@
 {
     "node_host": "http://localhost",
     "node_port": 3000,
-    "lc_host": "librarycloud.harvard.edu"
+    "lc_host": "librarycloud.harvard.edu",
+    "db": "tournament_signup",
+    "host_name": "localhost",
+	  "user_name": "tournament_signup",
+	  "pw": "YOURPASSWORD"
 }
