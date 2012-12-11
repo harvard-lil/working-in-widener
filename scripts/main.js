@@ -163,10 +163,10 @@ $(function() {
             iosocket.on('progress_update', function(data) {
 
                 if(data.p != player_id) {
-                    $('.opponent-progress').fadeOut('fast').delay(500).fadeIn('fast', function() { $(this).css('background-position', '0px -' + 100 * data.c + 'px');});
+                    $('.' + data.p + 'progress').fadeOut('fast').delay(500).fadeIn('fast', function() { $(this).css('background-position', '0px -' + 100 * data.c + 'px');});
                 }
                 else {
-                    $('.progress').css('background-position', '0px -' + 100 * data.c + 'px');
+                    $('.' + data.p + 'progress').css('background-position', '0px -' + 100 * data.c + 'px');
                 }
             });
 
@@ -213,7 +213,7 @@ $(function() {
                                if(callno === current_callno) {
                                 current_book = current_book + 1;
                                 $('#progress').data('current-book', current_book);
-                                iosocket.emit('shelved', {p: player_id, c: current_book});
+                                iosocket.emit('shelved', {p: player_id, r: room_id, c: current_book});
                                 if(current_book == cart_contents.length) {
                                     // Send elapsed time for leader board
                                     var now = new Date().getTime();
@@ -310,13 +310,13 @@ $(function() {
 
         // On load, we display a hover panel. Get user's name and ask them to hit play.
         $('#name-form').submit(function() {
-            if ($('#player-handle').val() !== "Waiting for your challenger.") {
+            if (!$('#start-status').hasClass('status-update')) {
 
                 var waiting_message = "Loading books on your cart now";
 
                 if ($('#num-players').val() === 'two_player') {
                     solo = false;
-                    waiting_message = ""
+                    waiting_message = "Waiting for your challenger."
                 }
                 //var message = {p: player_id, r: room_id, name: $('#player-handle').val(), solo: solo};
                 var message = {name: $('#player-handle').val(), solo: solo};
