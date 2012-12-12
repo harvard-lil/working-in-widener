@@ -179,7 +179,6 @@ $(function() {
             iosocket.on('winner', function(data) {
                 ready = false;
                 w.stop();
-                iosocket.disconnect()
                 $('#hover').html('<h1>' + data.name + ' WINS!</h1>').addClass('winner');
                 $('#hover').append('<p> in ' + data.elapsed_time + '</p>');
                 $('#hover').append('<div id="#start-status" class="status-update"><a href="." class="button">Start a new game?</a></div>');
@@ -187,7 +186,7 @@ $(function() {
                 $('#main').addClass('light');
                 $('#watchdisplay').text(data.elapsed_time);
                 $('#hover').show();
-                //$('#dashboard').text(data + ' WINS!').css('font-size', '108px');
+                iosocket.disconnect();
             });
 
 
@@ -222,7 +221,7 @@ $(function() {
                                 current_book = current_book + 1;
                                 $('#progress').data('current-book', current_book);
                                 iosocket.emit('shelved', {p: player_id, r: room_id, c: current_book});
-                                if(current_book == cart_contents.length) {
+                                if(current_book == cart_contents.length) {console.log('win');
                                     // Send elapsed time for leader board
                                     var now = new Date().getTime();
                                     var elapsed_time = now - start_time;
