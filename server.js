@@ -275,7 +275,7 @@ var clean_rooms = function() {
 
                 delete rooms[key];
 
-                if (open_room_id === key) {
+                if (open_room_id == key) {
                     open_room_id = false;
                 }
             }
